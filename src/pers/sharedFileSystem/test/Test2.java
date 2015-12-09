@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
-import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
-import pers.sharedFileSystem.bloomFilterManager.hashFunctions.SHA1_MD5;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.entity.ServerNode;

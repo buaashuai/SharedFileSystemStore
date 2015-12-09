@@ -1,5 +1,7 @@
 package pers.sharedFileSystem.communicationObject;
 
+import pers.sharedFileSystem.entity.FileType;
+
 import java.io.Serializable;
 
 /**
@@ -15,20 +17,29 @@ public class FingerprintInfo  implements Serializable {
      */
     public String NodeId;
     /**
-     * 文件绝对路径
+     * 文件相对路径
      */
     public String FilePath;
     /**
      * 文件名（带后缀）
      */
     public String FileName;
+    /**
+     * 文件类型
+     */
+    public FileType fileType;
 
     public FingerprintInfo(){}
 
-    public  FingerprintInfo(String md5,String nodeId,String filePath,String fileName){
+    public  FingerprintInfo(String md5,String nodeId,String filePath,String fileName,FileType type){
         this.Md5=md5;
         this.NodeId=nodeId;
         this.FilePath=filePath;
         this.FileName=fileName;
+        this.fileType=type;
+    }
+    public  FingerprintInfo(String md5,FileType type){
+        this.Md5=md5;
+        this.fileType=type;
     }
 }

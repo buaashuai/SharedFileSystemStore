@@ -6,17 +6,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
+import pers.sharedFileSystem.communicationObject.FindRedundancyObject;
 import pers.sharedFileSystem.communicationObject.MessageProtocol;
 import pers.sharedFileSystem.communicationObject.MessageType;
-import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
-import pers.sharedFileSystem.systemFileManager.MessageCodeHandler;
 
 /**
- * 监控某个连接（客户端）发来的消息
+ * 监控某个连接（客户端或者存储服务器）发来的消息
  */
 public class SocketAction implements Runnable {
 	/**
@@ -34,7 +32,7 @@ public class SocketAction implements Runnable {
 	/**
 	 *  接收延迟时间间隔
 	 */
-	private long receiveTimeDelay = 8000;
+	private long receiveTimeDelay = 5000;
 
 	public SocketAction(Socket s) {
 		this.socket = s;
@@ -42,57 +40,23 @@ public class SocketAction implements Runnable {
 	}
 
 	/**
-	 * 处理冗余验证消息
+	 * 启动处理查找冗余文件消息线程
 	 * @param mes
 	 * @return
 	 */
-	private MessageProtocol doCheckRedundancyAction(MessageProtocol mes){
-		String figurePrint=(String)mes.content;
-		MessageProtocol reMessage=new MessageProtocol();
-		//是否找到重复的文件指纹
-		String reMes="";
-		//验证指纹
-		if(BloomFilter.getInstance().isFingerPrintExist(figurePrint)) {
-			//此处应该返回指纹信息对应的文件的绝对路径
-			/**************************/
-			FingerprintInfo fingerprintInfo=new FingerprintInfo();//new FingerprintAdapter().getFingerprintInfoByMD5(figurePrint);
-			if(fingerprintInfo==null){
-				reMes="false";
-				reMessage.messageCode=4002;
-			}else {
-				reMessage.messageCode=4000;
-//				reMessage.content.put("filePath", fingerprintInfo.FilePath+fingerprintInfo.FileName);
-				reMes = "true  , file upload rapidly.";
-			}
-		}
-		else {
-			reMes="false";
-			reMessage.messageCode=4001;
-		}
-		reMessage.messageType=MessageType.REPLY_CHECK_REDUNDANCY;
-		LogRecord.FileHandleInfoLogger.info("BloomFilter check redundancy ["+figurePrint+"] "+reMes);
-		return reMessage;
-	}
-	/**
-	 * 处理添加指纹信息消息
-	 * @param mes
-	 * @return
-	 */
-	private MessageProtocol doAddFingerprintAction(MessageProtocol mes){
-		FingerprintInfo fInfo=(FingerprintInfo)mes.content;//new FingerprintInfo(figurePrint,filePath,fileName);
-		MessageProtocol reMessage=new MessageProtocol();
-		if(fInfo!=null) {
-			new FingerprintAdapter().saveFingerprint(fInfo);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.Md5+"]");
-			BloomFilter.getInstance().addFingerPrint(fInfo.Md5);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.Md5+"]");
-			reMessage.messageType=MessageType.REPLY_ADD_FINGERPRINT;
-			reMessage.messageCode=4000;
-			return reMessage;
-		}
+	private MessageProtocol doFindRedundancyAction(MessageProtocol mes){
+		FindRedundancyObject findRedundancyObject=(FindRedundancyObject)mes.content;
+		FindRedundancySocketAction findRedundancySocketAction=new FindRedundancySocketAction(this,findRedundancyObject.fingerprintInfo);
+		Thread thread = new Thread(findRedundancySocketAction);
+		thread.start();
 		return null;
 	}
 
+	private MessageProtocol doStopFindRedundancyAction(){
+
+		overThis();
+		return null;
+	}
 	/**
 	 * 收到消息之后进行分类处理
 	 * @param mes
@@ -100,15 +64,17 @@ public class SocketAction implements Runnable {
 	 */
 	private MessageProtocol doAction(MessageProtocol mes){
 		switch (mes.messageType){
-			case CHECK_REDUNDANCY:{
-				return doCheckRedundancyAction(mes);
+			case FIND_REDUNDANCY:{
+				return doFindRedundancyAction(mes);
 			}
-			case ADD_FINGERPRINT:{
-				return doAddFingerprintAction(mes);
+			case STOP_FIND_REDUNDANCY:{
+				return doStopFindRedundancyAction();
 			}
-			case KEEP_ALIVE:{
-				LogRecord.RunningInfoLogger.info("receive handshake");
-				return null;
+			case ADD_REDUNDANCY_INFO:{
+//				return doAddFingerprintAction(mes);
+			}
+			case ADD_FINGERPRINTINFO:{
+//				return doAddFingerprintAction(mes);
 			}
 			default:{
 				return null;
@@ -117,19 +83,33 @@ public class SocketAction implements Runnable {
 
 	}
 
+	/**
+	 * 给冗余验证服务器返回查找结果
+	 * @param fInfo
+	 */
+	public void sendFingerprintInfoToRedundancy(FingerprintInfo fInfo){
+		MessageProtocol reMessage=new MessageProtocol();
+		reMessage.messageType=MessageType.REPLY_FIND_REDUNDANCY;
+		reMessage.content=fInfo;
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(
+                    socket.getOutputStream());
+			oos.writeObject(reMessage);
+			oos.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		overThis();
+	}
 	public void run() {
 		while (run) {
-			// 超过接收延迟时间（毫秒）之后，终止此客户端的连接
-			if (System.currentTimeMillis() - lastReceiveTime > receiveTimeDelay) {
-				overThis();
-			} else {
 				try {
 					InputStream in = socket.getInputStream();
 					if (in.available() > 0) {
 						ObjectInputStream ois = new ObjectInputStream(in);
 						Object obj = ois.readObject();
 						MessageProtocol mes=(MessageProtocol)obj;
-						lastReceiveTime = System.currentTimeMillis();
 						MessageProtocol out = doAction(mes);// 处理消息，并给客户端反馈
 						if (out != null) {
 							ObjectOutputStream oos = new ObjectOutputStream(
@@ -145,7 +125,7 @@ public class SocketAction implements Runnable {
 					overThis();
 				}
 			}
-		}
+
 	}
 
 	/**

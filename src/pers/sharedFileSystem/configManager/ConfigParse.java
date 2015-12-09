@@ -308,7 +308,11 @@ public class ConfigParse {
         Element element = doc.getRootElement();
         SystemConfig systemConfig = new SystemConfig();
         systemConfig.Port = Integer.parseInt(element.getChildText("port"));
-        systemConfig.StorePath = element.getChildText("storePath");
+        systemConfig.FingerprintStorePath = element.getChildText("fingerprintStorePath");
+        systemConfig.RedundancyFileStorePath = element.getChildText("redundancyFileStorePath");
+        systemConfig.RedundancyIp = element.getChildText("redundancyIp");
+        systemConfig.RedundancyPort = Integer.parseInt(element.getChildText("redundancyPort"));
+
         Config.SYSTEMCONFIG = systemConfig;
     }
 }

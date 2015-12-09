@@ -1,13 +1,13 @@
 package pers.sharedFileSystem.networkManager;
 
+import pers.sharedFileSystem.configManager.Config;
+import pers.sharedFileSystem.entity.SystemConfig;
+import pers.sharedFileSystem.logManager.LogRecord;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Hashtable;
-
-import pers.sharedFileSystem.configManager.Config;
-import pers.sharedFileSystem.entity.SystemConfig;
-import pers.sharedFileSystem.logManager.LogRecord;
 
 /**
  * 监控新客户端连接的线程
@@ -56,14 +56,14 @@ public class ConnWatchDog implements Runnable {
 	public void run() {
 		serverSocket = null;
 		try {
-			serverSocket = new ServerSocket(systemConfig.Port, 5);
-			LogRecord.RunningInfoLogger.info("redundancy server started.");
+			serverSocket = new ServerSocket(systemConfig.Port, 100);
+			LogRecord.RunningInfoLogger.info("storage server started at port "+systemConfig.Port);
 			while(run) {
 				Socket s = serverSocket.accept();
 				LogRecord.RunningInfoLogger.info("new client connect [" + s.getInetAddress() + "]");
 				SocketAction socketAction = new SocketAction(s);
 				Thread thread = new Thread(socketAction);
-				threads.put(socketAction, thread);
+//				threads.put(socketAction, thread);
 				thread.start();
 			}
 		} catch (IOException e) {

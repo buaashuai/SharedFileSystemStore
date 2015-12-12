@@ -3,6 +3,7 @@ package pers.sharedFileSystem.systemFileManager;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 
 import java.io.*;
@@ -13,15 +14,16 @@ import java.util.List;
  * 指纹信息文件操作类
  */
 public class FingerprintAdapter {
+    private static SystemConfig sysConfig=Config.SYSTEMCONFIG;
     /**
      * 按照序列化的方式将指纹信息保存到磁盘
      * @param fingerprintInfo 待保存的指纹信息
      */
-    public void saveFingerprint(FingerprintInfo fingerprintInfo){
+    public static void saveFingerprint(FingerprintInfo fingerprintInfo){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
-        String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");
             return;
@@ -56,9 +58,9 @@ public class FingerprintAdapter {
      * @param md5 指纹信息
      * @return 该指纹信息对应的文件存储信息
      */
-    public FingerprintInfo getFingerprintInfoByMD5(String md5){
-        String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+    public static FingerprintInfo getFingerprintInfoByMD5(String md5){
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
@@ -113,13 +115,13 @@ public class FingerprintAdapter {
      * @param  directoryNodeId 获取某个的节点编号的全部指纹信息
      * @return
      */
-    public List<FingerprintInfo>getAllFingerprintInfo(String directoryNodeId){
+    public static List<FingerprintInfo>getAllFingerprintInfo(String directoryNodeId){
         List<FingerprintInfo>fingerprintInfos=new ArrayList<FingerprintInfo>();
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
-        String filePath=Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
             return fingerprintInfos;

@@ -9,21 +9,21 @@ public class SystemConfig {
      */
     public Integer Port;
     /**
-     * 冗余验证服务器的文件系统监听端口
-     */
-    public Integer RedundancyPort;
-    /**
-     * 冗余验证服务器ip-
-     */
-    public String RedundancyIp;
-    /**
      * 指纹信息存储路径
      */
     public String FingerprintStorePath;
     /**
+     * 指纹信息文件名
+     */
+    public String FingerprintName;
+    /**
      * 冗余信息文件存储路径
      */
     public String RedundancyFileStorePath;
+    /**
+     * 冗余信息文件名
+     */
+    public String RedundancyFileName;
 
     public SystemConfig(){
 
@@ -36,9 +36,9 @@ public class SystemConfig {
      */
     public void print(String tabs) {
         System.out.println(tabs + "Port: " + Port);
-        System.out.println(tabs + "RedundancyIp: " + RedundancyIp);
-        System.out.println(tabs + "RedundancyPort: " + RedundancyPort);
         System.out.println(tabs + "FingerprintStorePath: " + FingerprintStorePath);
+        System.out.println(tabs + "FingerprintName: " + FingerprintName);
         System.out.println(tabs + "RedundancyFileStorePath: " + RedundancyFileStorePath);
+        System.out.println(tabs + "RedundancyFileName: " + RedundancyFileName);
     }
 }

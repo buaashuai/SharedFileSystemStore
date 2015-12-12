@@ -6,10 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import pers.sharedFileSystem.communicationObject.FindRedundancyObject;
-import pers.sharedFileSystem.communicationObject.MessageProtocol;
-import pers.sharedFileSystem.communicationObject.MessageType;
-import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.*;
 import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 
@@ -33,6 +30,10 @@ public class SocketAction implements Runnable {
 	 *  接收延迟时间间隔
 	 */
 	private long receiveTimeDelay = 5000;
+	/**
+	 * 查找冗余文件消息的线程
+	 */
+	private FindRedundancySocketAction findRedundancySocketAction;
 
 	public SocketAction(Socket s) {
 		this.socket = s;
@@ -46,16 +47,35 @@ public class SocketAction implements Runnable {
 	 */
 	private MessageProtocol doFindRedundancyAction(MessageProtocol mes){
 		FindRedundancyObject findRedundancyObject=(FindRedundancyObject)mes.content;
-		FindRedundancySocketAction findRedundancySocketAction=new FindRedundancySocketAction(this,findRedundancyObject.fingerprintInfo);
+		findRedundancySocketAction=new FindRedundancySocketAction(this,findRedundancyObject.fingerprintInfo);
 		Thread thread = new Thread(findRedundancySocketAction);
 		thread.start();
 		return null;
 	}
 
+	/**
+	 * 停止查找冗余文件消息的线程
+	 * @return
+	 */
 	private MessageProtocol doStopFindRedundancyAction(){
-
+		findRedundancySocketAction.overThis();
 		overThis();
 		return null;
+	}
+	/**
+	 * 停止查找冗余文件消息的线程
+	 * @return
+	 */
+	private MessageProtocol doAddRedundancyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		RedundancyFileStoreInfo redundancyFileStoreInfo=(RedundancyFileStoreInfo)mes.content;
+		boolean re=FileSystemStore.addRedundancyFileStoreInfo(redundancyFileStoreInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4003;
+		reMes.messageType=MessageType.REPLY_ADD_REDUNDANCY_INFO;
+		return reMes;
 	}
 	/**
 	 * 收到消息之后进行分类处理
@@ -71,9 +91,12 @@ public class SocketAction implements Runnable {
 				return doStopFindRedundancyAction();
 			}
 			case ADD_REDUNDANCY_INFO:{
-//				return doAddFingerprintAction(mes);
+				return doAddRedundancyAction(mes);
 			}
 			case ADD_FINGERPRINTINFO:{
+//				return doAddFingerprintAction(mes);
+			}
+			case GET_REDUNDANCY_INFO:{
 //				return doAddFingerprintAction(mes);
 			}
 			default:{

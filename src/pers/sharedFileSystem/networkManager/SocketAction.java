@@ -114,6 +114,10 @@ public class SocketAction implements Runnable {
 			case GET_REDUNDANCY_INFO:{
 //				return doGetRedundancyAction(mes);
 			}
+			case KEEP_ALIVE:{
+				LogRecord.RunningInfoLogger.info("receive handshake");
+				return null;
+			}
 			default:{
 				return null;
 			}

@@ -7,7 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8d1ec864-595e-4917-8830-2934796e495f" name="Default" comment="bug修改">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/FileConfig.xml" afterPath="$PROJECT_DIR$/src/FileConfig.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" afterPath="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="a6197c55-aa1d-4d9e-b874-ac79bc068b4d" name="Failed commit: Default" comment="test" />
@@ -47,11 +47,31 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <file leaf-file-name="SocketAction.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.63721806">
+              <caret line="116" column="29" selection-start-line="116" selection-start-column="29" selection-end-line="116" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConnWatchDog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="2013" column="40" selection-start-line="2013" selection-start-column="40" selection-end-line="2013" selection-end-column="40" />
+              <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FindRedundancySocketAction.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FindRedundancySocketAction.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -67,11 +87,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FileConfig.xml" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FileConfig.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/FileConfig.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5747331">
-              <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="16" column="36" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -148,13 +168,13 @@
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FileSystemStore.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/systemFileManager/FingerprintAdapter.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/systemFileManager/messageCode.properties" />
-        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/.project" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/test/Test2.java" />
         <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/communicationObject/FindRedundancyObject.java" />
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/src/FileConfig.xml" />
+        <option value="$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java" />
       </list>
     </option>
   </component>
@@ -326,10 +346,6 @@
               <option name="myItemId" value="sharedFileSystem" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -372,24 +388,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="networkManager" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SharedFileSystemStore" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SharedFileSystemStore" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sharedFileSystem" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1108,7 +1106,7 @@
       <workItem from="1449903906295" duration="3926000" />
       <workItem from="1449918803566" duration="10620000" />
       <workItem from="1450145118683" duration="3670000" />
-      <workItem from="1450149702873" duration="8344000" />
+      <workItem from="1450149702873" duration="8977000" />
     </task>
     <task id="LOCAL-00001" summary="first commit">
       <created>1442129376567</created>
@@ -1392,11 +1390,23 @@
       <option name="project" value="LOCAL" />
       <updated>1450164586941</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="bug修改">
+      <created>1450184939019</created>
+      <option name="number" value="00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1450184939019</updated>
+    </task>
+    <task id="LOCAL-00049" summary="bug修改">
+      <created>1450185131135</created>
+      <option name="number" value="00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1450185131135</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="341462000" />
+    <option name="totallyTimeSpent" value="342095000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -1428,7 +1438,7 @@
       <window_info id="Structure" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18191902" sideWeight="0.4920635" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33409438" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1281198" sideWeight="0.49679488" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16749862" sideWeight="0.49679488" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29509905" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" x="163" y="129" width="1434" height="866" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15838926" sideWeight="0.50793654" order="6" side_tool="true" content_ui="tabs" />
@@ -1678,21 +1688,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7698541">
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FindRedundancySocketAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.57921636">
-          <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3549433">
-          <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
           <folding />
         </state>
       </provider>
@@ -1785,16 +1780,6 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="102" column="12" selection-start-line="102" selection-start-column="12" selection-end-line="102" selection-end-column="12" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="90" column="35" selection-start-line="90" selection-start-column="35" selection-end-line="90" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1924,7 +1909,7 @@
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="2013" column="40" selection-start-line="2013" selection-start-column="40" selection-end-line="2013" selection-end-column="40" />
+          <caret line="2019" column="40" selection-start-line="2019" selection-start-column="40" selection-end-line="2019" selection-end-column="40" />
           <folding />
         </state>
       </provider>
@@ -1939,8 +1924,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/FileConfig.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5747331">
-          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="36" selection-start-line="16" selection-start-column="36" selection-end-line="16" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FindRedundancySocketAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="35" selection-start-line="36" selection-start-column="35" selection-end-line="36" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/ConnWatchDog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/SocketAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.63721806">
+          <caret line="116" column="29" selection-start-line="116" selection-start-column="29" selection-end-line="116" selection-end-column="29" />
           <folding />
         </state>
       </provider>

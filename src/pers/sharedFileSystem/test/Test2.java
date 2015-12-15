@@ -146,53 +146,13 @@ private void deleteFileTest() throws Exception {
 	}
 
 	/**
-	 * 布隆过滤器测试
-	 */
-	private void BloomFilterTest(){
-		BloomFilter bloomFilter=BloomFilter.getInstance();
-		boolean flag=bloomFilter.isFingerPrintExist("123");
-		System.out.println(flag);
-		bloomFilter.addFingerPrint("123");
-		flag=bloomFilter.isFingerPrintExist("123");
-		System.out.println(flag);
-	}
-
-	/**
-	 * MD5生成测试
-	 */
-	private void SHA1_MD5_Test(){
-		String pa = "";
-		SHA1_MD5 sha1_md5=new SHA1_MD5();
-		try {
-			pa = sha1_md5.digestString("123456", SHA1_MD5.SHA_256);
-			System.out.println("SHA_256:" + pa.length() + " " + pa);
-			pa = sha1_md5.digestString("123456", SHA1_MD5.SHA_384);
-			System.out.println("SHA_384:" + pa.length() + " " + pa);
-			pa = sha1_md5.digestString("123456", SHA1_MD5.SHA_512);
-			System.out.println("SHA_512:" + pa.length() + " " + pa);
-			pa = sha1_md5.digestString("123456", SHA1_MD5.SHA_1);
-			System.out.println("SHA_1:" + pa.length() + " " + pa);
-			pa = sha1_md5.digestString("123456", SHA1_MD5.MD5);
-			System.out.println("MD5:" + pa.length() + " " + pa);
-			FileInputStream inputStream = new FileInputStream(new File(
-				"E:/图片视频/30939_1132245_133682.jpg"));
-			pa=sha1_md5.digestFile(inputStream,SHA1_MD5.MD5);
-			System.out.println("MD5:" + pa.length() + " " + pa);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * 指纹信息管理类测试
 	 */
 	private void FingerprintAdapterTest(){
 			FingerprintAdapter fingerprintAdapter=new FingerprintAdapter();
 //			FingerprintInfo fingerprintInfo=new FingerprintInfo("213","e:/df","a.txt");
 //			fingerprintAdapter.saveFingerprint("tempStoreNode",fingerprintInfo);
-			List<FingerprintInfo>fingerprintInfos=fingerprintAdapter.getAllFingerprintInfo("tempStoreNode");
+			List<FingerprintInfo>fingerprintInfos= FingerprintAdapter.getAllFingerprintInfo("tempStoreNode");
 			for(FingerprintInfo info:fingerprintInfos){
 				System.out.println(info.Md5+" "+info.FilePath+" "+info.FileName);
 			}

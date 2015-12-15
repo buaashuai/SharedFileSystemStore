@@ -24,7 +24,9 @@ public class FileSystemStore {
     public static boolean addRedundancyFileStoreInfo(RedundancyFileStoreInfo r){
         ArrayList<FingerprintInfo>fingerprintInfos=redundancyFileMap.get(r.essentialStorePath);
         if(fingerprintInfos!=null){
-            fingerprintInfos.add(r.otherFileInfo.get(0));
+            for(FingerprintInfo f:r.otherFileInfo) {
+                fingerprintInfos.add(f);
+            }
         }
         redundancyFileMap.put(r.essentialStorePath,fingerprintInfos);
         boolean re=RedundantFileAdapter.saveRedundancyFileStoreInfo(redundancyFileMap);

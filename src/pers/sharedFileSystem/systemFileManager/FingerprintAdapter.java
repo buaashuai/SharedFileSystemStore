@@ -19,19 +19,19 @@ public class FingerprintAdapter {
      * 按照序列化的方式将指纹信息保存到磁盘
      * @param fingerprintInfo 待保存的指纹信息
      */
-    public static void saveFingerprint(FingerprintInfo fingerprintInfo){
+    public static boolean saveFingerprint(FingerprintInfo fingerprintInfo){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
         String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
         String fileName=sysConfig.FingerprintName;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");
-            return;
+            return false;
         }
         File file = new File(filePath);
         if (!file.exists() && !file.isDirectory()) {//如果系统文件夹不存在
             LogRecord.RunningErrorLogger.error("save Fingerprint error, filePath illegal.");
-            return;
+            return false;
         }
         try{
             fout= new FileOutputStream(filePath+"/"+fileName, true);
@@ -39,8 +39,10 @@ public class FingerprintAdapter {
             sout.writeObject(fingerprintInfo);
         }catch (FileNotFoundException e){
             e.printStackTrace();
+            return false;
         }catch (IOException e){
             e.printStackTrace();
+            return false;
         }finally {
                 try {
                     if(fout!=null)
@@ -51,6 +53,7 @@ public class FingerprintAdapter {
                     e.printStackTrace();
                 }
         }
+        return true;
     }
 
     /**

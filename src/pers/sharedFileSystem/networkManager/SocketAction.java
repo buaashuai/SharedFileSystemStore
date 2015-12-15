@@ -63,7 +63,7 @@ public class SocketAction implements Runnable {
 		return null;
 	}
 	/**
-	 * 停止查找冗余文件消息的线程
+	 * 添加冗余文件信息
 	 * @return
 	 */
 	private MessageProtocol doAddRedundancyAction(MessageProtocol mes){
@@ -75,6 +75,21 @@ public class SocketAction implements Runnable {
 		else
 			reMes.messageCode=4003;
 		reMes.messageType=MessageType.REPLY_ADD_REDUNDANCY_INFO;
+		return reMes;
+	}
+	/**
+	 * 添加指纹信息
+	 * @return
+	 */
+	private MessageProtocol doAddFingerprintAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+		boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4004;
+		reMes.messageType=MessageType.REPLY_ADD_FINGERPRINTINFO;
 		return reMes;
 	}
 	/**
@@ -94,10 +109,10 @@ public class SocketAction implements Runnable {
 				return doAddRedundancyAction(mes);
 			}
 			case ADD_FINGERPRINTINFO:{
-//				return doAddFingerprintAction(mes);
+				return doAddFingerprintAction(mes);
 			}
 			case GET_REDUNDANCY_INFO:{
-//				return doAddFingerprintAction(mes);
+//				return doGetRedundancyAction(mes);
 			}
 			default:{
 				return null;

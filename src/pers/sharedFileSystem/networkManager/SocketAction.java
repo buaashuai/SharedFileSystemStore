@@ -118,6 +118,9 @@ public class SocketAction implements Runnable {
 				LogRecord.RunningInfoLogger.info("receive handshake");
 				return null;
 			}
+			case SOCKET_MONITOR:{
+				return null;
+			}
 			default:{
 				return null;
 			}

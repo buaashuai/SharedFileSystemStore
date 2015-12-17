@@ -78,4 +78,9 @@ public enum MessageType implements Serializable {
      * <p>返回某个目录下的冗余文件信息</p>
      */
     REPLY_GET_REDUNDANCY_INFO,
+    /**
+     * 冗余验证服务器 ——> 存储服务器
+     * <p>连接是否正常</p>
+     */
+    SOCKET_MONITOR,
 }

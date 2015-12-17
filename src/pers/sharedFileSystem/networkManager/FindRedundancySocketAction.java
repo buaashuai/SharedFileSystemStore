@@ -39,7 +39,6 @@ public class FindRedundancySocketAction implements Runnable {
 		if(!CommonUtil.validateString(filePath)){
 			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
 			socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
-			socketAction.overThis();
 			overThis();
 			return;
 		}
@@ -47,7 +46,6 @@ public class FindRedundancySocketAction implements Runnable {
 		if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
 			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, can not find Fingerprint file.");
 			socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
-			socketAction.overThis();
 			overThis();//如果系统文件夹不存在或者指纹信息文件不存在
 			return;
 		}
@@ -69,8 +67,6 @@ public class FindRedundancySocketAction implements Runnable {
 					FingerprintInfo tmp=(FingerprintInfo)object;
 					if(tmp.Md5.equals(srcFingerprintInfo.Md5)) {
 						retFingerprintInfo=tmp;
-//						socketAction.sendFingerprintInfoToRedundancy(tmp);
-						socketAction.overThis();
 						overThis();
 					}
 				}
@@ -87,7 +83,6 @@ public class FindRedundancySocketAction implements Runnable {
 		}finally {
 			overThis();
 			socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
-			socketAction.overThis();
 			try {
 				if(oip!=null)
 					oip.close();

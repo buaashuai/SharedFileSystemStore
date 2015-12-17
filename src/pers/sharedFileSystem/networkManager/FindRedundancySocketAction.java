@@ -65,7 +65,7 @@ public class FindRedundancySocketAction implements Runnable {
 				Object object =oip.readObject();
 				if (object instanceof FingerprintInfo) { // 判断对象类型
 					FingerprintInfo tmp=(FingerprintInfo)object;
-					if(tmp.Md5.equals(srcFingerprintInfo.Md5)) {
+					if(tmp.getMd5().equals(srcFingerprintInfo.getMd5())) {
 						retFingerprintInfo=tmp;
 						overThis();
 					}

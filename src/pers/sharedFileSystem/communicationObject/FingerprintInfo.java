@@ -10,31 +10,83 @@ import java.util.Date;
  * 指纹信息类
  */
 public class FingerprintInfo  implements Serializable {
+
+    //get和set方法的目的是为了将该类转换成json对象
+    public String getMd5() {
+        return Md5;
+    }
+
+    public String getNodeId() {
+        return NodeId;
+    }
+
+    public String getFilePath() {
+        return FilePath;
+    }
+
+    public String getFileName() {
+        return FileName;
+    }
+
+    public FileType getFileType() {
+        return fileType;
+    }
+
+    public String getUpdateTime() {
+        SimpleDateFormat dateFm = new SimpleDateFormat("yyyyMMddHHmmss"); // 格式化当前系统日期
+        String time = dateFm.format(new Date());
+        return time;
+    }
+
+    public void setMd5(String md5) {
+        Md5 = md5;
+    }
+
+    public void setNodeId(String nodeId) {
+        NodeId = nodeId;
+    }
+
+    public void setFilePath(String filePath) {
+        FilePath = filePath;
+    }
+
+    public void setFileName(String fileName) {
+        FileName = fileName;
+    }
+
+    public void setFileType(FileType fileType) {
+        this.fileType = fileType;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        UpdateTime = updateTime;
+    }
+
     /**
      * 文件指纹
      */
-    public String Md5;
+    private String Md5;
     /**
      *文件存储的节点编号
      */
-    public String NodeId;
+    private String NodeId;
     /**
      * 文件相对路径
      */
-    public String FilePath;
+    private String FilePath;
     /**
      * 文件名（带后缀）
      */
-    public String FileName;
+    private String FileName;
     /**
      * 文件类型
      */
-    public FileType fileType;
+    private FileType fileType;
 
     /**
      * 添加日期
      */
-    public Date UpdateTime;
+    private Date UpdateTime;
 
     public FingerprintInfo(){}
 

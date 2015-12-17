@@ -150,16 +150,21 @@ public class SocketAction implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		overThis();
+//		overThis();
 	}
 	public void run() {
 		while (run) {
+			// 超过接收延迟时间（毫秒）之后，终止此客户端的连接
+			if (System.currentTimeMillis() - lastReceiveTime > receiveTimeDelay) {
+				overThis();
+			} else {
 				try {
 					InputStream in = socket.getInputStream();
 					if (in.available() > 0) {
 						ObjectInputStream ois = new ObjectInputStream(in);
 						Object obj = ois.readObject();
-						MessageProtocol mes=(MessageProtocol)obj;
+						MessageProtocol mes = (MessageProtocol) obj;
+						lastReceiveTime = System.currentTimeMillis();
 						MessageProtocol out = doAction(mes);// 处理消息，并给客户端反馈
 						if (out != null) {
 							ObjectOutputStream oos = new ObjectOutputStream(
@@ -175,6 +180,7 @@ public class SocketAction implements Runnable {
 					overThis();
 				}
 			}
+		}
 
 	}
 

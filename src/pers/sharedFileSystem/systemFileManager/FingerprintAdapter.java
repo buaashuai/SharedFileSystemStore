@@ -37,6 +37,7 @@ public class FingerprintAdapter {
             fout= new FileOutputStream(filePath+"/"+fileName, true);
             sout= new ObjectOutputStream(fout);
             sout.writeObject(fingerprintInfo);
+            LogRecord.RunningInfoLogger.info("save Fingerprint successful. [ " + fingerprintInfo+" ]");
         }catch (FileNotFoundException e){
             e.printStackTrace();
             return false;
@@ -115,10 +116,9 @@ public class FingerprintAdapter {
     }
     /**
      * 按照序列化的方式获取指纹信息
-     * @param  directoryNodeId 获取某个的节点编号的全部指纹信息
      * @return
      */
-    public static List<FingerprintInfo>getAllFingerprintInfo(String directoryNodeId){
+    public static List<FingerprintInfo>getAllFingerprintInfo(){
         List<FingerprintInfo>fingerprintInfos=new ArrayList<FingerprintInfo>();
         FileInputStream fin = null;
         BufferedInputStream bis =null;
@@ -130,8 +130,10 @@ public class FingerprintAdapter {
             return fingerprintInfos;
         }
         File file = new File(filePath);
-        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists())
+        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
+            LogRecord.FileHandleErrorLogger.error("can not find "+fileName);
             return fingerprintInfos;//如果系统文件夹不存在或者指纹信息文件不存在
+        }
         try{
             fin = new FileInputStream(filePath+"/"+fileName);
             bis = new BufferedInputStream(fin);

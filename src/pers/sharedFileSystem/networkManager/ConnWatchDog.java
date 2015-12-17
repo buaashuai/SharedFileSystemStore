@@ -60,7 +60,7 @@ public class ConnWatchDog implements Runnable {
 			LogRecord.RunningInfoLogger.info("storage server started at port "+systemConfig.Port);
 			while(run) {
 				Socket s = serverSocket.accept();
-				LogRecord.RunningInfoLogger.info("new client connect [" + s.getInetAddress() + "]");
+				LogRecord.RunningInfoLogger.info("new client connect [" + s.getInetAddress() +":"+s.getLocalPort()+ "]");
 				SocketAction socketAction = new SocketAction(s);
 				Thread thread = new Thread(socketAction);
 //				threads.put(socketAction, thread);

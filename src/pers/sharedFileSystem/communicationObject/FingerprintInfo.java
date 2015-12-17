@@ -3,6 +3,8 @@ package pers.sharedFileSystem.communicationObject;
 import pers.sharedFileSystem.entity.FileType;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 指纹信息类
@@ -29,6 +31,11 @@ public class FingerprintInfo  implements Serializable {
      */
     public FileType fileType;
 
+    /**
+     * 添加日期
+     */
+    public Date UpdateTime;
+
     public FingerprintInfo(){}
 
     public  FingerprintInfo(String md5,String nodeId,String filePath,String fileName,FileType type){
@@ -37,9 +44,24 @@ public class FingerprintInfo  implements Serializable {
         this.FilePath=filePath;
         this.FileName=fileName;
         this.fileType=type;
+        this.UpdateTime=new Date();
     }
+
     public  FingerprintInfo(String md5,FileType type){
         this.Md5=md5;
         this.fileType=type;
+    }
+
+    public String toString(){
+        String str="";
+        SimpleDateFormat dateFm = new SimpleDateFormat("yyyyMMddHHmmss"); // 格式化当前系统日期
+        String time = dateFm.format(new Date());
+        str+="UpdateTime: "+time+" , ";
+        str+="Md5: "+Md5+" , ";
+        str+="NodeId: "+NodeId+" , ";
+        str+="FilePath: "+FilePath+" , ";
+        str+="FileName: "+FileName+" , ";
+        str+="fileType: "+fileType;
+        return str;
     }
 }

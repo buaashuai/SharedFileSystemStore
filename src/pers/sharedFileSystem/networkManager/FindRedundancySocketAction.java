@@ -40,15 +40,19 @@ public class FindRedundancySocketAction implements Runnable {
 			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
 			socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
 			socketAction.overThis();
+			overThis();
 			return;
 		}
 		File file = new File(filePath);
 		if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
+			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, can not find Fingerprint file.");
 			socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
 			socketAction.overThis();
-			return;//如果系统文件夹不存在或者指纹信息文件不存在
+			overThis();//如果系统文件夹不存在或者指纹信息文件不存在
+			return;
 		}
 		try{
+			LogRecord.RunningInfoLogger.info("start to find Fingerprint.");
 			fin = new FileInputStream(filePath+"/"+fileName);
 			bis = new BufferedInputStream(fin);
 			while (run) {
@@ -57,18 +61,17 @@ public class FindRedundancySocketAction implements Runnable {
 				}catch (EOFException e) {
 					// e.printStackTrace();
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
-					socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
+//					socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
 					overThis();
-					return;
 				}
-				Object object = new Object();
-				object = oip.readObject();
+				Object object =oip.readObject();
 				if (object instanceof FingerprintInfo) { // 判断对象类型
 					FingerprintInfo tmp=(FingerprintInfo)object;
 					if(tmp.Md5.equals(srcFingerprintInfo.Md5)) {
-						socketAction.sendFingerprintInfoToRedundancy(tmp);
+						retFingerprintInfo=tmp;
+//						socketAction.sendFingerprintInfoToRedundancy(tmp);
 						socketAction.overThis();
-						return;
+						overThis();
 					}
 				}
 			}

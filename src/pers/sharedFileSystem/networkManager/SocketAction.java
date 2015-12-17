@@ -133,12 +133,17 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMessage=new MessageProtocol();
 		reMessage.messageType=MessageType.REPLY_FIND_REDUNDANCY;
 		reMessage.content=fInfo;
+		String str="null";
+		if(fInfo!=null){
+			str=fInfo.toString();
+		}
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(
                     socket.getOutputStream());
 			oos.writeObject(reMessage);
 			oos.flush();
+			LogRecord.RunningInfoLogger.info("send REPLY_FIND_REDUNDANCY, FingerprintInfo="+str);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

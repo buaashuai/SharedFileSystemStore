@@ -43,13 +43,14 @@ public class RedundantFileAdapter {
 
         try{
             fout = new FileOutputStream(filePath + "/" + fileName, true);
-            sout = new ObjectOutputStream(fout);
            for(String key:redundancyFileMap.keySet()) {
+               sout = new ObjectOutputStream(fout);
                RedundancyFileStoreInfo redundancyFileStoreInfo=new RedundancyFileStoreInfo();
                redundancyFileStoreInfo.essentialStorePath=key;
                redundancyFileStoreInfo.otherFileInfo=redundancyFileMap.get(key);
                sout.writeObject(redundancyFileStoreInfo);
            }
+            LogRecord.RunningInfoLogger.info("save RedundancyFileStoreInfo successful. ");
         }catch (FileNotFoundException e){
             e.printStackTrace();
             return false;
@@ -57,10 +58,14 @@ public class RedundantFileAdapter {
             e.printStackTrace();
             File newFile=new File(filePath+"/"+fileName);
             newFile.delete();
-            oldFile.renameTo(newFile);
+            tempFile.renameTo(newFile);
             return false;
         }finally {
             try {
+                //删除临时文件
+                if(tempFile.exists()){
+                    tempFile.delete();
+                }
                 if(fout!=null)
                     fout.close();
                 if(sout!=null)
@@ -89,8 +94,10 @@ public class RedundantFileAdapter {
             return redundancyFileStoreInfos;
         }
         File file = new File(filePath);
-        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists())
+        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
+            LogRecord.FileHandleErrorLogger.error("can not find "+fileName);
             return redundancyFileStoreInfos;//如果系统文件夹不存在或者冗余信息文件不存在
+        }
         try{
             fin = new FileInputStream(filePath+"/"+fileName);
             bis = new BufferedInputStream(fin);
@@ -102,8 +109,7 @@ public class RedundantFileAdapter {
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
                     return redundancyFileStoreInfos;
                 }
-                Object object = new Object();
-                object = oip.readObject();
+                Object object =oip.readObject();
                 if (object instanceof RedundancyFileStoreInfo) { // 判断对象类型
                     redundancyFileStoreInfos.add((RedundancyFileStoreInfo) object);
                 }

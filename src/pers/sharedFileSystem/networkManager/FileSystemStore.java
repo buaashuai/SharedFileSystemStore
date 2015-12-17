@@ -3,6 +3,7 @@ package pers.sharedFileSystem.networkManager;
 
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
+import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 import pers.sharedFileSystem.systemFileManager.RedundantFileAdapter;
 
@@ -18,16 +19,16 @@ public class FileSystemStore {
     private static ConcurrentHashMap<String,ArrayList<FingerprintInfo>> redundancyFileMap;
 
     /**
-     * 添加一条冗余信息
+     * 添加冗余信息
      * @param r
      */
     public static boolean addRedundancyFileStoreInfo(RedundancyFileStoreInfo r){
         ArrayList<FingerprintInfo>fingerprintInfos=redundancyFileMap.get(r.essentialStorePath);
-        if(fingerprintInfos!=null){
-            for(FingerprintInfo f:r.otherFileInfo) {
-                fingerprintInfos.add(f);
-            }
+        if(fingerprintInfos==null){
+            fingerprintInfos=new ArrayList<FingerprintInfo>();
         }
+        for(FingerprintInfo f:r.otherFileInfo)
+            fingerprintInfos.add(f);
         redundancyFileMap.put(r.essentialStorePath,fingerprintInfos);
         boolean re=RedundantFileAdapter.saveRedundancyFileStoreInfo(redundancyFileMap);
         return  re;
@@ -44,6 +45,7 @@ public class FileSystemStore {
         for(RedundancyFileStoreInfo r:redundancyFileStoreInfos){
             redundancyFileMap.put(r.essentialStorePath,r.otherFileInfo);
         }
+        LogRecord.RunningInfoLogger.info("load RedundancyFileStoreInfo successful. total= "+redundancyFileStoreInfos.size());
     }
 
     public FileSystemStore() {

@@ -86,8 +86,7 @@ public class FingerprintAdapter {
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
                     return null;
                 }
-                Object object = new Object();
-                object = oip.readObject();
+                Object object = oip.readObject();
                 if (object instanceof FingerprintInfo) { // 判断对象类型
                     FingerprintInfo tmp=(FingerprintInfo)object;
                     if(tmp.getMd5().equals(md5))
@@ -145,8 +144,7 @@ public class FingerprintAdapter {
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
                     return fingerprintInfos;
                 }
-                Object object = new Object();
-                object = oip.readObject();
+                Object object =  oip.readObject();
                 if (object instanceof FingerprintInfo) { // 判断对象类型
                     fingerprintInfos.add((FingerprintInfo) object);
                 }

@@ -24,6 +24,14 @@ public class SystemConfig {
      * 冗余信息文件名
      */
     public String RedundancyFileName;
+    /**
+     * 引用信息文件存储路径
+     */
+    public String FileReferenceStorePath;
+    /**
+     * 引用信息文件名
+     */
+    public String FileReferenceName;
 
     public SystemConfig(){
 
@@ -40,5 +48,7 @@ public class SystemConfig {
         System.out.println(tabs + "FingerprintName: " + FingerprintName);
         System.out.println(tabs + "RedundancyFileStorePath: " + RedundancyFileStorePath);
         System.out.println(tabs + "RedundancyFileName: " + RedundancyFileName);
+        System.out.println(tabs + "FileReferenceStorePath: " + FileReferenceStorePath);
+        System.out.println(tabs + "FileReferenceName: " + FileReferenceName);
     }
 }

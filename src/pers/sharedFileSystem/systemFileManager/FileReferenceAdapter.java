@@ -4,7 +4,7 @@ import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
-import pers.sharedFileSystem.entity.DirectoryNode;
+import pers.sharedFileSystem.entity.FileReferenceInfo;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 
@@ -14,25 +14,25 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 冗余文件存储信息操作类
+ * 文件引用信息操作类
  */
-public class RedundantFileAdapter {
+public class FileReferenceAdapter {
     private static SystemConfig sysConfig=Config.SYSTEMCONFIG;
     /**
-     * 按照序列化的方式将冗余文件存储信息保存到磁盘(保存全部信息)
+     * 按照序列化的方式将文件引用信息保存到磁盘(保存全部信息)
      */
-    public static boolean saveRedundancyFileStoreInfo(ConcurrentHashMap<String,ArrayList<FingerprintInfo>> redundancyFileMap){
+    public static boolean saveFileReference( ConcurrentHashMap<String,Integer> fileReferenceInfoMap){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
-        String filePath=sysConfig.RedundancyFileStorePath;//冗余文件信息的保存路径
-        String fileName=sysConfig.RedundancyFileName;
+        String filePath=sysConfig.FileReferenceStorePath;
+        String fileName=sysConfig.FileReferenceName;
         if(!CommonUtil.validateString(filePath)){
-            LogRecord.FileHandleErrorLogger.error("save Redundant error, filePath is null.");
+            LogRecord.FileHandleErrorLogger.error("save FileReference error, filePath is null.");
             return false;
         }
         File file = new File(filePath);
         if (!file.exists() && !file.isDirectory()) {
-            LogRecord.RunningErrorLogger.error("save Redundant error, filePath illegal.");
+            LogRecord.RunningErrorLogger.error("save FileReference error, filePath illegal.");
             return false;
         }
         File oldFile=new File(filePath+"/"+fileName);
@@ -44,15 +44,15 @@ public class RedundantFileAdapter {
         try{
             fout = new FileOutputStream(filePath + "/" + fileName, true);
             int num=0;
-           for(String key:redundancyFileMap.keySet()) {
-               sout = new ObjectOutputStream(fout);
-               RedundancyFileStoreInfo redundancyFileStoreInfo=new RedundancyFileStoreInfo();
-               redundancyFileStoreInfo.essentialStorePath=key;
-               redundancyFileStoreInfo.otherFileInfo=redundancyFileMap.get(key);
-               sout.writeObject(redundancyFileStoreInfo);
-               num++;
-           }
-            LogRecord.RunningInfoLogger.info("save RedundancyFileStoreInfo successful. total="+num);
+            for(String key:fileReferenceInfoMap.keySet()) {
+                sout = new ObjectOutputStream(fout);
+                FileReferenceInfo fileReferenceInfo=new FileReferenceInfo();
+                fileReferenceInfo.Path=key;
+                fileReferenceInfo.Frequency=fileReferenceInfoMap.get(key);
+                sout.writeObject(fileReferenceInfo);
+                num++;
+            }
+            LogRecord.RunningInfoLogger.info("save FileReference successful. total="+num);
         }catch (FileNotFoundException e){
             e.printStackTrace();
             return false;
@@ -81,24 +81,24 @@ public class RedundantFileAdapter {
     }
 
     /**
-     * 按照序列化的方式获取全部冗余文件存储信息
+     * 按照序列化的方式获取全部文件引用信息
      * @return
      */
-    public static List<RedundancyFileStoreInfo> getAllRedundancyFileStoreInfo(){
-        List<RedundancyFileStoreInfo>redundancyFileStoreInfos=new ArrayList<RedundancyFileStoreInfo>();
+    public static List<FileReferenceInfo>getAllFileReferenceInfo(){
+        List<FileReferenceInfo>fileReferenceInfos=new ArrayList<FileReferenceInfo>();
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
-        String filePath=sysConfig.RedundancyFileStorePath;//冗余文件信息的保存路径
-        String fileName=sysConfig.RedundancyFileName;
+        String filePath=sysConfig.FileReferenceStorePath;
+        String fileName=sysConfig.FileReferenceName;
         if(!CommonUtil.validateString(filePath)){
-            LogRecord.FileHandleErrorLogger.error("get Redundant error, filePath is null.");
-            return redundancyFileStoreInfos;
+            LogRecord.FileHandleErrorLogger.error("get FileReferenceInfo error, filePath is null.");
+            return fileReferenceInfos;
         }
         File file = new File(filePath);
         if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
             LogRecord.FileHandleErrorLogger.error("can not find "+fileName);
-            return redundancyFileStoreInfos;//如果系统文件夹不存在或者冗余信息文件不存在
+            return fileReferenceInfos;//如果系统文件夹不存在或者指纹信息文件不存在
         }
         try{
             fin = new FileInputStream(filePath+"/"+fileName);
@@ -109,11 +109,11 @@ public class RedundantFileAdapter {
                 }catch (EOFException e) {
                     // e.printStackTrace();
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
-                    return redundancyFileStoreInfos;
+                    return fileReferenceInfos;
                 }
                 Object object =oip.readObject();
-                if (object instanceof RedundancyFileStoreInfo) { // 判断对象类型
-                    redundancyFileStoreInfos.add((RedundancyFileStoreInfo) object);
+                if (object instanceof FileReferenceInfo) { // 判断对象类型
+                    fileReferenceInfos.add((FileReferenceInfo) object);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -134,6 +134,7 @@ public class RedundantFileAdapter {
                 e.printStackTrace();
             }
         }
-        return redundancyFileStoreInfos;
+        return fileReferenceInfos;
     }
+
 }

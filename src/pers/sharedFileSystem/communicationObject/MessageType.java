@@ -83,4 +83,14 @@ public enum MessageType implements Serializable {
      * <p>连接是否正常</p>
      */
     SOCKET_MONITOR,
+    /**
+     * 客户端 ——> 存储服务器
+     * <p>添加文件引用</p>
+     */
+    ADD_FREQUENCY,
+    /**
+     * 存储服务器 ——> 客户端
+     * <p>返回添加文件引用</p>
+     */
+    REPLY_ADD_FREQUENCY,
 }

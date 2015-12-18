@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import pers.sharedFileSystem.communicationObject.*;
+import pers.sharedFileSystem.entity.FileReferenceInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 
@@ -93,6 +94,23 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
+	 * 添加文件引用信息
+	 * @return
+	 */
+	private MessageProtocol doAddFrequencyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+		FileReferenceInfo referenceInfo=new FileReferenceInfo();
+		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
+		boolean re=FileSystemStore.addFileReferenceInfo(referenceInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4005;
+		reMes.messageType=MessageType.REPLY_ADD_FREQUENCY;
+		return reMes;
+	}
+	/**
 	 * 收到消息之后进行分类处理
 	 * @param mes
 	 * @return
@@ -110,6 +128,9 @@ public class SocketAction implements Runnable {
 			}
 			case ADD_FINGERPRINTINFO:{
 				return doAddFingerprintAction(mes);
+			}
+			case ADD_FREQUENCY:{
+				return doAddFrequencyAction(mes);
 			}
 			case GET_REDUNDANCY_INFO:{
 //				return doGetRedundancyAction(mes);

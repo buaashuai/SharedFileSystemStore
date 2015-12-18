@@ -35,6 +35,14 @@ public class FileSystemStore {
         boolean re=RedundantFileAdapter.saveRedundancyFileStoreInfo(redundancyFileMap);
         return  re;
     }
+
+    /**
+     * 根据“相对路径”获取冗余文件信息
+     */
+    public static  ArrayList<FingerprintInfo> geRedundancyFileInfoByEssentialStorePath(String essentialStorePath){
+        return redundancyFileMap.get(essentialStorePath);
+    }
+
     /**
      * 添加文件引用
      * @param r

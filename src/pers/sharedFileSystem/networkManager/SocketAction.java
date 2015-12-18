@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import pers.sharedFileSystem.communicationObject.*;
 import pers.sharedFileSystem.entity.FileReferenceInfo;
@@ -111,6 +112,22 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
+	 * 根据“相对路径”获取冗余文件信息
+	 * @return
+	 */
+	private MessageProtocol doGetRedundancyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		String essentialStorePath=(String)mes.content;
+		ArrayList<FingerprintInfo> re=FileSystemStore.geRedundancyFileInfoByEssentialStorePath(essentialStorePath);
+		if(re!=null&&re.size()>0)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4006;
+		reMes.content=re;
+		reMes.messageType=MessageType.REPLY_GET_REDUNDANCY_INFO;
+		return reMes;
+	}
+	/**
 	 * 收到消息之后进行分类处理
 	 * @param mes
 	 * @return
@@ -133,7 +150,7 @@ public class SocketAction implements Runnable {
 				return doAddFrequencyAction(mes);
 			}
 			case GET_REDUNDANCY_INFO:{
-//				return doGetRedundancyAction(mes);
+				return doGetRedundancyAction(mes);
 			}
 			case KEEP_ALIVE:{
 				LogRecord.RunningInfoLogger.info("receive handshake");

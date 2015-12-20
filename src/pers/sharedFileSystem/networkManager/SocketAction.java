@@ -1,13 +1,12 @@
 package pers.sharedFileSystem.networkManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
 import pers.sharedFileSystem.communicationObject.*;
+import pers.sharedFileSystem.configManager.Config;
+import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.entity.FileReferenceInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
@@ -156,6 +155,9 @@ public class SocketAction implements Runnable {
 				LogRecord.RunningInfoLogger.info("receive handshake");
 				return null;
 			}
+			case GET_FINGERPRINT_LIST:{
+				return doGetFingerprintListAction(mes);
+			}
 			case SOCKET_MONITOR:{
 				return null;
 			}
@@ -165,7 +167,97 @@ public class SocketAction implements Runnable {
 		}
 
 	}
-
+	/**
+	 * 获取文件指纹列表信息
+	 * @return
+	 */
+	private MessageProtocol doGetFingerprintListAction(MessageProtocol mes){
+		String filePath= Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
+		String fileName=  Config.SYSTEMCONFIG.FingerprintName;
+		FileInputStream fin = null;
+		BufferedInputStream bis =null;
+		ObjectInputStream oip=null;
+		ArrayList<String> fingers=new ArrayList<String>();
+		int maxNum=100;//每次发送多少条
+		if(!CommonUtil.validateString(filePath)){
+			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
+			sendFingerprintListToRedundancy(fingers);
+			overThis();
+			return null;
+		}
+		File file = new File(filePath);
+		if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
+			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, can not find Fingerprint file.");
+			sendFingerprintListToRedundancy(fingers);
+			overThis();//如果系统文件夹不存在或者指纹信息文件不存在
+			return null;
+		}
+		try{
+			LogRecord.RunningInfoLogger.info("start to load Fingerprint.");
+			fin = new FileInputStream(filePath+"/"+fileName);
+			bis = new BufferedInputStream(fin);
+			while (run) {
+				try {
+					oip = new ObjectInputStream(bis); // 每次重新构造对象输入流
+				}catch (EOFException e) {
+					// e.printStackTrace();
+//                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
+//					socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
+					overThis();
+				}
+				Object object =oip.readObject();
+				if (object instanceof FingerprintInfo) { // 判断对象类型
+					FingerprintInfo tmp=(FingerprintInfo)object;
+					fingers.add(tmp.getMd5());
+					if(fingers.size()>=maxNum){
+						sendFingerprintListToRedundancy(fingers);
+						fingers.clear();
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			overThis();
+			e.printStackTrace();
+		} catch (IOException e) {
+			overThis();
+			e.printStackTrace();
+		}catch (ClassNotFoundException e) {
+			overThis();
+			e.printStackTrace();
+		}finally {
+			overThis();
+			sendFingerprintListToRedundancy(fingers);
+			try {
+				if(oip!=null)
+					oip.close();
+				if(bis!=null)
+					bis.close();
+				if(fin!=null)
+					fin.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	/**
+	 * 给冗余验证服务器返回指纹信息列表
+	 */
+	public void sendFingerprintListToRedundancy(ArrayList<String> info){
+		MessageProtocol reMessage=new MessageProtocol();
+		reMessage.messageType=MessageType.REPLY_GET_FINGERPRINT_LIST;
+		reMessage.content=info;
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(
+					socket.getOutputStream());
+			oos.writeObject(reMessage);
+			oos.flush();
+			LogRecord.RunningInfoLogger.info("send REPLY_GET_FINGERPRINT_LIST, num="+info.size());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * 给冗余验证服务器返回查找结果
 	 * @param fInfo
@@ -188,7 +280,6 @@ public class SocketAction implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		overThis();
 	}
 	public void run() {
 		while (run) {

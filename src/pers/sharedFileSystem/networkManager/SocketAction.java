@@ -202,12 +202,12 @@ public class SocketAction implements Runnable {
 				}catch (EOFException e) {
 					// e.printStackTrace();
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
-//					socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
-//					overThis();
-					sendFingerprintListToRedundancy(fingers);
-					fingers.clear();
-					if(run)
-						run=false;
+
+					//目的是一定要把指纹信息发送完毕
+					if(fingers.size()>0) {
+						sendFingerprintListToRedundancy(fingers);
+						fingers.clear();
+					}
 					break;
 				}
 				Object object =oip.readObject();
@@ -231,6 +231,7 @@ public class SocketAction implements Runnable {
 			e.printStackTrace();
 		} finally {
 //			overThis();
+			//此处发送的一定是空集合，目的是告诉冗余验证服务器，已经发送完毕
 			sendFingerprintListToRedundancy(fingers);
 			try {
 				if(oip!=null)
@@ -259,8 +260,12 @@ public class SocketAction implements Runnable {
 			oos.writeObject(reMessage);
 			oos.flush();
 			LogRecord.RunningInfoLogger.info("send REPLY_GET_FINGERPRINT_LIST, num="+info.size());
+			//发送完毕，关闭
+			if(info.size()==0)
+				overThis();
 		} catch (IOException e) {
 			e.printStackTrace();
+			overThis();
 		}
 	}
 	/**

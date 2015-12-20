@@ -61,6 +61,7 @@ public class FindRedundancySocketAction implements Runnable {
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
 //					socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
 					overThis();
+					break;
 				}
 				Object object =oip.readObject();
 				if (object instanceof FingerprintInfo) { // 判断对象类型

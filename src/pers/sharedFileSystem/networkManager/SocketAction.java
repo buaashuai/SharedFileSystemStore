@@ -208,6 +208,7 @@ public class SocketAction implements Runnable {
 					fingers.clear();
 					if(run)
 						run=false;
+					break;
 				}
 				Object object =oip.readObject();
 				if (object instanceof FingerprintInfo) { // 判断对象类型

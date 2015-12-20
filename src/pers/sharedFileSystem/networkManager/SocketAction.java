@@ -182,14 +182,14 @@ public class SocketAction implements Runnable {
 		if(!CommonUtil.validateString(filePath)){
 			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
 			sendFingerprintListToRedundancy(fingers);
-			overThis();
+//			overThis();
 			return null;
 		}
 		File file = new File(filePath);
 		if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
 			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, can not find Fingerprint file.");
 			sendFingerprintListToRedundancy(fingers);
-			overThis();//如果系统文件夹不存在或者指纹信息文件不存在
+//			overThis();//如果系统文件夹不存在或者指纹信息文件不存在
 			return null;
 		}
 		try{
@@ -203,7 +203,9 @@ public class SocketAction implements Runnable {
 					// e.printStackTrace();
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
 //					socketAction.sendFingerprintInfoToRedundancy(retFingerprintInfo);
-					overThis();
+//					overThis();
+					sendFingerprintListToRedundancy(fingers);
+					fingers.clear();
 				}
 				Object object =oip.readObject();
 				if (object instanceof FingerprintInfo) { // 判断对象类型
@@ -224,8 +226,8 @@ public class SocketAction implements Runnable {
 		}catch (ClassNotFoundException e) {
 			overThis();
 			e.printStackTrace();
-		}finally {
-			overThis();
+		} finally {
+//			overThis();
 			sendFingerprintListToRedundancy(fingers);
 			try {
 				if(oip!=null)

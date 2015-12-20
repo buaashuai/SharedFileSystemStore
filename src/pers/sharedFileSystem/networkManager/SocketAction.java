@@ -261,8 +261,8 @@ public class SocketAction implements Runnable {
 			oos.flush();
 			LogRecord.RunningInfoLogger.info("send REPLY_GET_FINGERPRINT_LIST, num="+info.size());
 			//发送完毕，关闭
-			if(info.size()==0)
-				overThis();
+//			if(info.size()==0)
+//				overThis();
 		} catch (IOException e) {
 			e.printStackTrace();
 			overThis();

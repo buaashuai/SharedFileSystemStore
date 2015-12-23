@@ -21,7 +21,7 @@ public class FileReferenceAdapter {
     /**
      * 按照序列化的方式将文件引用信息保存到磁盘(保存全部信息)
      */
-    public static boolean saveFileReference( ConcurrentHashMap<String,Integer> fileReferenceInfoMap){
+    public static boolean saveFileReference( ConcurrentHashMap<String,FileReferenceInfo> fileReferenceInfoMap){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
         String filePath=sysConfig.FileReferenceStorePath;
@@ -44,12 +44,9 @@ public class FileReferenceAdapter {
         try{
             fout = new FileOutputStream(filePath + "/" + fileName, true);
             int num=0;
-            for(String key:fileReferenceInfoMap.keySet()) {
+            for(FileReferenceInfo val:fileReferenceInfoMap.values()) {
                 sout = new ObjectOutputStream(fout);
-                FileReferenceInfo fileReferenceInfo=new FileReferenceInfo();
-                fileReferenceInfo.Path=key;
-                fileReferenceInfo.Frequency=fileReferenceInfoMap.get(key);
-                sout.writeObject(fileReferenceInfo);
+                sout.writeObject(val);
                 num++;
             }
             LogRecord.RunningInfoLogger.info("save FileReference successful. total="+num);

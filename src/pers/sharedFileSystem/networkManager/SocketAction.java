@@ -34,7 +34,7 @@ public class SocketAction implements Runnable {
 	/**
 	 * 查找冗余文件消息的线程
 	 */
-	private FindRedundancySocketAction findRedundancySocketAction;
+//	private FindRedundancySocketAction findRedundancySocketAction;
 
 	public SocketAction(Socket s) {
 		this.socket = s;
@@ -47,10 +47,12 @@ public class SocketAction implements Runnable {
 	 * @return
 	 */
 	private MessageProtocol doFindRedundancyAction(MessageProtocol mes){
-		FindRedundancyObject findRedundancyObject=(FindRedundancyObject)mes.content;
-		findRedundancySocketAction=new FindRedundancySocketAction(this,findRedundancyObject.fingerprintInfo);
-		Thread thread = new Thread(findRedundancySocketAction);
-		thread.start();
+		FingerprintInfo fInfo=(FingerprintInfo)mes.content;
+		FingerprintInfo retFingerprintInfo=FileSystemStore.findFingerprintInfoByMD5(fInfo.getMd5());
+		sendFingerprintInfoToRedundancy(retFingerprintInfo);
+//		findRedundancySocketAction=new FindRedundancySocketAction(this,findRedundancyObject.fingerprintInfo);
+//		Thread thread = new Thread(findRedundancySocketAction);
+//		thread.start();
 		return null;
 	}
 
@@ -59,7 +61,7 @@ public class SocketAction implements Runnable {
 	 * @return
 	 */
 	private MessageProtocol doStopFindRedundancyAction(){
-		findRedundancySocketAction.overThis();
+//		findRedundancySocketAction.overThis();
 		overThis();
 		return null;
 	}
@@ -230,8 +232,8 @@ public class SocketAction implements Runnable {
 			overThis();
 			e.printStackTrace();
 		} finally {
-//			overThis();
-			//此处发送的一定是空集合，目的是告诉冗余验证服务器，已经发送完毕
+
+			//此处发送的一定是空集合，目的是告诉冗余验证服务器，指纹已经发送完毕
 			sendFingerprintListToRedundancy(fingers);
 			try {
 				if(oip!=null)
@@ -260,9 +262,7 @@ public class SocketAction implements Runnable {
 			oos.writeObject(reMessage);
 			oos.flush();
 			LogRecord.RunningInfoLogger.info("send REPLY_GET_FINGERPRINT_LIST, num="+info.size());
-			//发送完毕，关闭
-//			if(info.size()==0)
-//				overThis();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			overThis();

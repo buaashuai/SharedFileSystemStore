@@ -91,7 +91,7 @@ public class FileSystemStore {
     public static  ArrayList<FingerprintInfo> validateFileNames(ArrayList<FingerprintInfo> fingerprintInfos){
         ArrayList<FingerprintInfo> res=new ArrayList<FingerprintInfo>();
         for(FingerprintInfo info : fingerprintInfos){
-            if(!fileReferenceInfoMap.get(info.getFilePath()+info.getFileName()).isPhysicalDeletedByTrueUser()){
+            if(!fileReferenceInfoMap.get(info.getFilePath()+info.getFileName()).getPhysicalDeletedByTrueUserFlag()){
                 res.add(info);
             }
         }
@@ -116,7 +116,7 @@ public class FileSystemStore {
         FingerprintInfo fInfo=fingerprintInfoMap.get(fingerprintInfo.getMd5());
         fInfo.setFrequency(fInfo.getFrequency()-1);
         if(fInfo.getFrequency()<1){//如果删除之后存储服务器里面该结点的引用信息为0，则直接删除这条记录
-            if(fInfo.isPhysicalDeletedByTrueUser()){//如果isPhysicalDeletedByTrueUser=true则还需要删除物理文件
+            if(fInfo.getPhysicalDeletedByTrueUserFlag()){//如果isPhysicalDeletedByTrueUser=true则还需要删除物理文件
                 Node n= Config.getNodeByNodeId(fingerprintInfo.getNodeId());
                 DirectoryNode node = (DirectoryNode)n;
                 //删除物理文件
@@ -163,7 +163,7 @@ public class FileSystemStore {
         FingerprintInfo fInfo=fileReferenceInfoMap.get(fingerprintInfo.getFilePath() + fingerprintInfo.getFileName());
         if(fInfo!=null){
             if(fInfo.getFrequency()>0) {//如果该文件存在引用信息
-                fInfo.setIsPhysicalDeletedByTrueUser(true);
+                fInfo.setPhysicalDeletedByTrueUserFlag(true);
                 re = FingerprintAdapter.saveAllFingerprint(fingerprintInfoMap);
             }else{//如果该文件不存在引用信息
                 //删除物理文件

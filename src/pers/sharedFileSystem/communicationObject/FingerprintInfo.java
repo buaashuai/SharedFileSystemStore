@@ -96,22 +96,24 @@ public class FingerprintInfo  implements Serializable {
         Frequency = frequency;
     }
 
-    public boolean isPhysicalDeletedByTrueUser() {
-        return isPhysicalDeletedByTrueUser;
-    }
-
-    public void setIsPhysicalDeletedByTrueUser(boolean isPhysicalDeletedByTrueUser) {
-        this.isPhysicalDeletedByTrueUser = isPhysicalDeletedByTrueUser;
-    }
 
     /**
      * 文件被引用的频率
      */
     private int  Frequency;
+
+    public boolean getPhysicalDeletedByTrueUserFlag() {
+        return physicalDeletedByTrueUserFlag;
+    }
+
+    public void setPhysicalDeletedByTrueUserFlag(boolean physicalDeletedByTrueUserFlag) {
+        this.physicalDeletedByTrueUserFlag = physicalDeletedByTrueUserFlag;
+    }
+
     /**
      * 是否被上传这个文件的真实用户物理删除
      */
-    private boolean isPhysicalDeletedByTrueUser;
+    private boolean physicalDeletedByTrueUserFlag;
 
     public FingerprintInfo(){}
 
@@ -123,7 +125,7 @@ public class FingerprintInfo  implements Serializable {
         this.fileType=type;
         this.UpdateTime=new Date();
         this.Frequency=0;
-        this.isPhysicalDeletedByTrueUser=false;
+        this.physicalDeletedByTrueUserFlag =false;
     }
 
     public  FingerprintInfo(String md5,FileType type){
@@ -142,7 +144,7 @@ public class FingerprintInfo  implements Serializable {
         str+="FileName: "+FileName+" , ";
         str+="fileType: "+fileType+" , ";
         str+="Frequency: "+Frequency+" , ";
-        str+="isPhysicalDeletedByTrueUser: "+isPhysicalDeletedByTrueUser;
+        str+="physicalDeletedByTrueUserFlag: "+ physicalDeletedByTrueUserFlag;
         return str;
     }
 }

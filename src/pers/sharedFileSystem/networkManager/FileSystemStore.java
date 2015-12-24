@@ -135,9 +135,10 @@ public class FileSystemStore {
                                 +filePath);
                     }
                 }
+                fingerprintInfoMap.remove(fingerprintInfo.getMd5());
+                fileReferenceInfoMap.remove(fingerprintInfo.getFilePath() + fingerprintInfo.getFileName());
             }
-            fingerprintInfoMap.remove(fingerprintInfo.getMd5());
-            fileReferenceInfoMap.remove(fingerprintInfo.getFilePath() + fingerprintInfo.getFileName());
+
         }
 
         boolean re=FingerprintAdapter.saveAllFingerprint(fingerprintInfoMap);

@@ -1,5 +1,6 @@
 package pers.sharedFileSystem.systemFileManager;
 
+import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
@@ -9,12 +10,72 @@ import pers.sharedFileSystem.logManager.LogRecord;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 指纹信息文件操作类
  */
 public class FingerprintAdapter {
     private static SystemConfig sysConfig=Config.SYSTEMCONFIG;
+    /**
+     * 按照序列化的方式将文件指纹存储信息保存到磁盘(保存全部信息)
+     */
+    public static boolean saveAllFingerprint(ConcurrentHashMap<String,FingerprintInfo> fingerprintInfoMap){
+        FileOutputStream fout=null;
+        ObjectOutputStream sout =null;
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
+        if(!CommonUtil.validateString(filePath)){
+            LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");
+            return false;
+        }
+        File file = new File(filePath);
+        if (!file.exists() && !file.isDirectory()) {
+            LogRecord.RunningErrorLogger.error("save Fingerprint error, filePath illegal.");
+            return false;
+        }
+        File oldFile=new File(filePath+"/"+fileName);
+        File tempFile=new File(filePath+"/temp.sys");
+        if(oldFile.exists()){
+            oldFile.renameTo(tempFile);
+        }
+
+        try{
+            fout = new FileOutputStream(filePath + "/" + fileName, true);
+            int num=0;
+            for(FingerprintInfo val:fingerprintInfoMap.values()) {
+                sout = new ObjectOutputStream(fout);
+                sout.writeObject(val);
+                num++;
+            }
+            LogRecord.RunningInfoLogger.info("save Fingerprint successful. total="+num);
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+            return false;
+        }catch (IOException e){
+            e.printStackTrace();
+            File newFile=new File(filePath+"/"+fileName);
+            newFile.delete();
+            tempFile.renameTo(newFile);
+            return false;
+        }finally {
+            try {
+                //删除临时文件
+                if(tempFile.exists()){
+                    tempFile.delete();
+                }
+                if(fout!=null)
+                    fout.close();
+                if(sout!=null)
+                    sout.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return  false;
+            }
+        }
+        return true;
+    }
+
     /**
      * 按照序列化的方式将指纹信息保存到磁盘
      * @param fingerprintInfo 待保存的指纹信息

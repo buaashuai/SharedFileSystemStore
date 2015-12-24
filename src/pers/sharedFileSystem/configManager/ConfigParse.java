@@ -312,8 +312,6 @@ public class ConfigParse {
         systemConfig.RedundancyFileStorePath = element.getChildText("redundancyFileStorePath");
         systemConfig.FingerprintName = element.getChildText("fingerprintName");
         systemConfig.RedundancyFileName = element.getChildText("redundancyFileName");
-        systemConfig.FileReferenceStorePath = element.getChildText("fileReferenceStorePath");
-        systemConfig.FileReferenceName = element.getChildText("fileReferenceName");
 
         Config.SYSTEMCONFIG = systemConfig;
     }

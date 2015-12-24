@@ -7,9 +7,7 @@ import java.util.ArrayList;
 import pers.sharedFileSystem.communicationObject.*;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
-import pers.sharedFileSystem.entity.FileReferenceInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
-import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 
 /**
  * 监控某个连接（客户端或者存储服务器）发来的消息
@@ -81,18 +79,50 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
+	 * 删除冗余文件信息
+	 * @return
+	 */
+	private MessageProtocol doDeleteRedundancyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		RedundancyFileStoreInfo redundancyFileStoreInfo=(RedundancyFileStoreInfo)mes.content;
+		boolean re=FileSystemStore.deleteRedundancyFileStoreInfo(redundancyFileStoreInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4007;
+		reMes.messageType=MessageType.REPLY_DELETE_REDUNDANCY_INFO;
+		return reMes;
+	}
+	/**
 	 * 添加指纹信息
 	 * @return
 	 */
 	private MessageProtocol doAddFingerprintAction(MessageProtocol mes){
 		MessageProtocol reMes=new MessageProtocol();
 		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
-		boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
+		//boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
+		boolean re=FileSystemStore.addFingerprintInfo(fingerprintInfo);
 		if(re)
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4004;
 		reMes.messageType=MessageType.REPLY_ADD_FINGERPRINTINFO;
+		return reMes;
+	}
+	/**
+	 * 删除指纹信息
+	 * @return
+	 */
+	private MessageProtocol doDeleteFingerprintAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+		//boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
+		boolean re=FileSystemStore.deleteFingerprintInfo(fingerprintInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4009;
+		reMes.messageType=MessageType.REPLY_DELETE_FINGERPRINTINFO;
 		return reMes;
 	}
 	/**
@@ -102,14 +132,31 @@ public class SocketAction implements Runnable {
 	private MessageProtocol doAddFrequencyAction(MessageProtocol mes){
 		MessageProtocol reMes=new MessageProtocol();
 		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
-		FileReferenceInfo referenceInfo=new FileReferenceInfo();
-		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
-		boolean re=FileSystemStore.addFileReferenceInfo(referenceInfo);
+//		FileReferenceInfo referenceInfo=new FileReferenceInfo();
+//		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
+		boolean re=FileSystemStore.addFileReferenceInfo(fingerprintInfo);
 		if(re)
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4005;
 		reMes.messageType=MessageType.REPLY_ADD_FREQUENCY;
+		return reMes;
+	}
+	/**
+	 * 删除文件引用信息
+	 * @return
+	 */
+	private MessageProtocol doDeleteFrequencyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+//		FileReferenceInfo referenceInfo=new FileReferenceInfo();
+//		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
+		boolean re=FileSystemStore.deleteFileReferenceInfo(fingerprintInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4008;
+		reMes.messageType=MessageType.REPLY_DELETE_FREQUENCY;
 		return reMes;
 	}
 	/**
@@ -119,13 +166,26 @@ public class SocketAction implements Runnable {
 	private MessageProtocol doGetRedundancyAction(MessageProtocol mes){
 		MessageProtocol reMes=new MessageProtocol();
 		String essentialStorePath=(String)mes.content;
-		ArrayList<FingerprintInfo> re=FileSystemStore.geRedundancyFileInfoByEssentialStorePath(essentialStorePath);
+		ArrayList<FingerprintInfo> re=FileSystemStore.getRedundancyFileInfoByEssentialStorePath(essentialStorePath);
 		if(re!=null&&re.size()>0)
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4006;
 		reMes.content=re;
 		reMes.messageType=MessageType.REPLY_GET_REDUNDANCY_INFO;
+		return reMes;
+	}
+	/**
+	 * 根据“相对路径”和文件名验证文件有效性
+	 * @return
+	 */
+	private MessageProtocol doValidateFileNamesAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		ArrayList<FingerprintInfo> fingerprintInfos=(ArrayList<FingerprintInfo>)mes.content;
+		ArrayList<FingerprintInfo> re=FileSystemStore.validateFileNames(fingerprintInfos);
+		reMes.messageCode=4000;
+		reMes.content=re;
+		reMes.messageType=MessageType.REPLY_VALIDATE_FILENAMES;
 		return reMes;
 	}
 	/**
@@ -144,14 +204,26 @@ public class SocketAction implements Runnable {
 			case ADD_REDUNDANCY_INFO:{
 				return doAddRedundancyAction(mes);
 			}
+			case DELETE_REDUNDANCY_INFO:{
+				return doDeleteRedundancyAction(mes);
+			}
 			case ADD_FINGERPRINTINFO:{
 				return doAddFingerprintAction(mes);
+			}
+			case DELETE_FINGERPRINTINFO:{
+				return doDeleteFingerprintAction(mes);
 			}
 			case ADD_FREQUENCY:{
 				return doAddFrequencyAction(mes);
 			}
+			case DELETE_FREQUENCY:{
+				return doDeleteFrequencyAction(mes);
+			}
 			case GET_REDUNDANCY_INFO:{
 				return doGetRedundancyAction(mes);
+			}
+			case VALIDATE_FILENAMES:{
+				return doValidateFileNamesAction(mes);
 			}
 			case KEEP_ALIVE:{
 				LogRecord.RunningInfoLogger.info("receive handshake");

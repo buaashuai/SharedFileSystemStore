@@ -21,6 +21,10 @@ public enum FileType implements Serializable {
 	 */
 	DIRECTORY("directory"),
 	/**
+	 * 普通文件类型
+	 */
+	DOCUMENT("document"),
+	/**
 	 * JEPG.jpg
 	 */
 	JPEG("ffd8ffe000104a464946"),

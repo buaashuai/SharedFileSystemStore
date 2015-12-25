@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <SystemConfig>
-		<fingerprintStorePath>C:/Users/dell/Desktop/temp/sysInfo</fingerprintStorePath><!--指纹信息文件保存路径 -->
+		<fingerprintStorePath>E:/ftpServer/SharedFileSystemStore</fingerprintStorePath><!--指纹信息文件保存路径 -->
 		<fingerprintName>Fingerprint_store.sys</fingerprintName><!--指纹信息文件名 -->
-		<redundancyFileStorePath>C:/Users/dell/Desktop/temp/sysInfo</redundancyFileStorePath><!--冗余信息文件保存路径 -->
+		<redundancyFileStorePath>E:/ftpServer/SharedFileSystemStore</redundancyFileStorePath><!--冗余信息文件保存路径 -->
 		<redundancyFileName>Redundancy_store.sys</redundancyFileName><!--冗余信息文件名 -->
 		<port>9996</port><!-- 本地存储服务器的文件系统监听端口 -->
 </SystemConfig>

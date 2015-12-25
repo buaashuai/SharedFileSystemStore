@@ -91,7 +91,8 @@ public class FileSystemStore {
     public static  ArrayList<FingerprintInfo> validateFileNames(ArrayList<FingerprintInfo> fingerprintInfos){
         ArrayList<FingerprintInfo> res=new ArrayList<FingerprintInfo>();
         for(FingerprintInfo info : fingerprintInfos){
-            if(!fileReferenceInfoMap.get(info.getFilePath()+info.getFileName()).getPhysicalDeletedByTrueUserFlag()){
+            FingerprintInfo f=fileReferenceInfoMap.get(info.getFilePath()+info.getFileName());
+            if(f!=null&&f.getPhysicalDeletedByTrueUserFlag()){
                 res.add(info);
             }
         }

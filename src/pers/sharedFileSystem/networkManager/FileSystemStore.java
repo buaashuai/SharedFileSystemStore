@@ -92,7 +92,7 @@ public class FileSystemStore {
         ArrayList<FingerprintInfo> res=new ArrayList<FingerprintInfo>();
         for(FingerprintInfo info : fingerprintInfos){
             FingerprintInfo f=fileReferenceInfoMap.get(info.getFilePath()+info.getFileName());
-            if(f!=null&&f.getPhysicalDeletedByTrueUserFlag()){
+            if(f!=null&&!f.getPhysicalDeletedByTrueUserFlag()){
                 res.add(info);
             }
         }

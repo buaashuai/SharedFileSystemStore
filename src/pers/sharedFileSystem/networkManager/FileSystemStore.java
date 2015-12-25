@@ -86,7 +86,7 @@ public class FileSystemStore {
         return redundancyFileMap.get(essentialStorePath);
     }
     /**
-     * 根据“相对路径”和文件名 验证文件有效性
+     * 根据“相对路径”和文件名 验证文件有效性，
      */
     public static  ArrayList<FingerprintInfo> validateFileNames(ArrayList<FingerprintInfo> fingerprintInfos){
         ArrayList<FingerprintInfo> res=new ArrayList<FingerprintInfo>();

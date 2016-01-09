@@ -11,15 +11,15 @@ import java.util.Hashtable;
  */
 public class ServerNode extends Node implements Serializable {
 	/**
-	 * 资源目录树根节点的Ip地址
+	 * 存储服务器的Ip地址
 	 */
 	public String Ip;
 	/**
-	 * 资源目录树根节点的端口号
+	 * 存储服务器上FTP的端口号
 	 */
 	public Integer Port;
 	/**
-	 * 资源目录树根节点对应的存储服务器上的文件系统服务端口
+	 * 存储服务器上的文件系统服务端口
 	 */
 	public Integer ServerPort;
 	/**

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 指纹信息文件操作类
+ * 指纹信息文件操作类（文件元数据操作管理类）
  */
 public class FingerprintAdapter {
     private static SystemConfig sysConfig=Config.SYSTEMCONFIG;

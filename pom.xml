@@ -100,5 +100,11 @@
 			<artifactId>ezmorph</artifactId>
 			<version>1.0.6</version>
 		</dependency>
+		<!--系统状态收集类库（CPU，内存、磁盘使用状况）-->
+		<dependency>
+			<groupId>org.fusesource</groupId>
+			<artifactId>sigar</artifactId>
+			<version>1.6.4</version>
+		</dependency>
 	</dependencies>
 </project>

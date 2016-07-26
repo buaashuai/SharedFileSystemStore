@@ -5,14 +5,25 @@ package pers.sharedFileSystem.entity;
  */
 public class SystemConfig {
     /**
-     * 冗余验证服务器上的监听端口
+     * 本地存储服务器的文件系统监听端口
      */
     public Integer Port;
-
     /**
      * 指纹信息存储路径
      */
-    public String StorePath;
+    public String FingerprintStorePath;
+    /**
+     * 指纹信息文件名
+     */
+    public String FingerprintName;
+    /**
+     * 冗余信息文件存储路径
+     */
+    public String RedundancyFileStorePath;
+    /**
+     * 冗余信息文件名
+     */
+    public String RedundancyFileName;
 
     public SystemConfig(){
 
@@ -25,6 +36,9 @@ public class SystemConfig {
      */
     public void print(String tabs) {
         System.out.println(tabs + "Port: " + Port);
-        System.out.println(tabs + "StorePath: " + StorePath);
+        System.out.println(tabs + "FingerprintStorePath: " + FingerprintStorePath);
+        System.out.println(tabs + "FingerprintName: " + FingerprintName);
+        System.out.println(tabs + "RedundancyFileStorePath: " + RedundancyFileStorePath);
+        System.out.println(tabs + "RedundancyFileName: " + RedundancyFileName);
     }
 }

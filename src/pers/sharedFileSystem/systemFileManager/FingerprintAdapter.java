@@ -1,44 +1,110 @@
 package pers.sharedFileSystem.systemFileManager;
 
+import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 指纹信息文件操作类
+ * 指纹信息文件操作类（文件元数据操作管理类）
  */
 public class FingerprintAdapter {
+    private static SystemConfig sysConfig=Config.SYSTEMCONFIG;
+    /**
+     * 按照序列化的方式将文件指纹存储信息保存到磁盘(保存全部信息)
+     */
+    public static boolean saveAllFingerprint(ConcurrentHashMap<String,FingerprintInfo> fingerprintInfoMap){
+        FileOutputStream fout=null;
+        ObjectOutputStream sout =null;
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
+        if(!CommonUtil.validateString(filePath)){
+            LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");
+            return false;
+        }
+        File file = new File(filePath);
+        if (!file.exists() && !file.isDirectory()) {
+            LogRecord.RunningErrorLogger.error("save Fingerprint error, filePath illegal.");
+            return false;
+        }
+        File oldFile=new File(filePath+"/"+fileName);
+        File tempFile=new File(filePath+"/temp.sys");
+        if(oldFile.exists()){
+            oldFile.renameTo(tempFile);
+        }
+
+        try{
+            fout = new FileOutputStream(filePath + "/" + fileName, true);
+            int num=0;
+            for(FingerprintInfo val:fingerprintInfoMap.values()) {
+                sout = new ObjectOutputStream(fout);
+                sout.writeObject(val);
+                num++;
+            }
+            LogRecord.RunningInfoLogger.info("save Fingerprint successful. total="+num);
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+            return false;
+        }catch (IOException e){
+            e.printStackTrace();
+            File newFile=new File(filePath+"/"+fileName);
+            newFile.delete();
+            tempFile.renameTo(newFile);
+            return false;
+        }finally {
+            try {
+                //删除临时文件
+                if(tempFile.exists()){
+                    tempFile.delete();
+                }
+                if(fout!=null)
+                    fout.close();
+                if(sout!=null)
+                    sout.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return  false;
+            }
+        }
+        return true;
+    }
+
     /**
      * 按照序列化的方式将指纹信息保存到磁盘
      * @param fingerprintInfo 待保存的指纹信息
      */
-    public void saveFingerprint(FingerprintInfo fingerprintInfo){
+    public static boolean saveFingerprint(FingerprintInfo fingerprintInfo){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
-        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("save Fingerprint error, filePath is null.");
-            return;
+            return false;
         }
         File file = new File(filePath);
         if (!file.exists() && !file.isDirectory()) {//如果系统文件夹不存在
             LogRecord.RunningErrorLogger.error("save Fingerprint error, filePath illegal.");
-            return;
+            return false;
         }
         try{
             fout= new FileOutputStream(filePath+"/"+fileName, true);
             sout= new ObjectOutputStream(fout);
             sout.writeObject(fingerprintInfo);
+            LogRecord.RunningInfoLogger.info("save Fingerprint successful. [ " + fingerprintInfo+" ]");
         }catch (FileNotFoundException e){
             e.printStackTrace();
+            return false;
         }catch (IOException e){
             e.printStackTrace();
+            return false;
         }finally {
                 try {
                     if(fout!=null)
@@ -49,6 +115,7 @@ public class FingerprintAdapter {
                     e.printStackTrace();
                 }
         }
+        return true;
     }
 
     /**
@@ -56,9 +123,9 @@ public class FingerprintAdapter {
      * @param md5 指纹信息
      * @return 该指纹信息对应的文件存储信息
      */
-    public FingerprintInfo getFingerprintInfoByMD5(String md5){
-        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+    public static FingerprintInfo getFingerprintInfoByMD5(String md5){
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
@@ -80,11 +147,10 @@ public class FingerprintAdapter {
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
                     return null;
                 }
-                Object object = new Object();
-                object = oip.readObject();
+                Object object = oip.readObject();
                 if (object instanceof FingerprintInfo) { // 判断对象类型
                     FingerprintInfo tmp=(FingerprintInfo)object;
-                    if(tmp.Md5.equals(md5))
+                    if(tmp.getMd5().equals(md5))
                         return tmp;
                 }
             }
@@ -110,23 +176,24 @@ public class FingerprintAdapter {
     }
     /**
      * 按照序列化的方式获取指纹信息
-     * @param  directoryNodeId 获取某个的节点编号的全部指纹信息
      * @return
      */
-    public List<FingerprintInfo>getAllFingerprintInfo(String directoryNodeId){
+    public static List<FingerprintInfo>getAllFingerprintInfo(){
         List<FingerprintInfo>fingerprintInfos=new ArrayList<FingerprintInfo>();
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
-        String filePath=Config.SYSTEMCONFIG.StorePath;//指纹信息的保存路径
-        String fileName=Common.FINGERPRINT_NAME;
+        String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=sysConfig.FingerprintName;
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
             return fingerprintInfos;
         }
         File file = new File(filePath);
-        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists())
+        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
+            LogRecord.FileHandleErrorLogger.error("can not find "+fileName);
             return fingerprintInfos;//如果系统文件夹不存在或者指纹信息文件不存在
+        }
         try{
             fin = new FileInputStream(filePath+"/"+fileName);
             bis = new BufferedInputStream(fin);
@@ -138,8 +205,7 @@ public class FingerprintAdapter {
 //                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
                     return fingerprintInfos;
                 }
-                Object object = new Object();
-                object = oip.readObject();
+                Object object =  oip.readObject();
                 if (object instanceof FingerprintInfo) { // 判断对象类型
                     fingerprintInfos.add((FingerprintInfo) object);
                 }

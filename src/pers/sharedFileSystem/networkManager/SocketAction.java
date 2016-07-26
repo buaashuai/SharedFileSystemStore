@@ -1,22 +1,16 @@
 package pers.sharedFileSystem.networkManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
-import pers.sharedFileSystem.bloomFilterManager.BloomFilter;
-import pers.sharedFileSystem.communicationObject.MessageProtocol;
-import pers.sharedFileSystem.communicationObject.MessageType;
+import pers.sharedFileSystem.communicationObject.*;
+import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
-import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.logManager.LogRecord;
-import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
-import pers.sharedFileSystem.systemFileManager.MessageCodeHandler;
 
 /**
- * 监控某个连接（客户端）发来的消息
+ * 监控某个连接（客户端或者存储服务器）发来的消息
  */
 public class SocketAction implements Runnable {
 	/**
@@ -34,7 +28,11 @@ public class SocketAction implements Runnable {
 	/**
 	 *  接收延迟时间间隔
 	 */
-	private long receiveTimeDelay = 8000;
+	private long receiveTimeDelay = 5000;
+	/**
+	 * 查找冗余文件消息的线程
+	 */
+//	private FindRedundancySocketAction findRedundancySocketAction;
 
 	public SocketAction(Socket s) {
 		this.socket = s;
@@ -42,57 +40,154 @@ public class SocketAction implements Runnable {
 	}
 
 	/**
-	 * 处理冗余验证消息
+	 * 处理查找文件元数据消息
 	 * @param mes
 	 * @return
 	 */
-	private MessageProtocol doCheckRedundancyAction(MessageProtocol mes){
-		String figurePrint=(String)mes.content;
-		MessageProtocol reMessage=new MessageProtocol();
-		//是否找到重复的文件指纹
-		String reMes="";
-		//验证指纹
-		if(BloomFilter.getInstance().isFingerPrintExist(figurePrint)) {
-			//此处应该返回指纹信息对应的文件的绝对路径
-			/**************************/
-			FingerprintInfo fingerprintInfo=new FingerprintInfo();//new FingerprintAdapter().getFingerprintInfoByMD5(figurePrint);
-			if(fingerprintInfo==null){
-				reMes="false";
-				reMessage.messageCode=4002;
-			}else {
-				reMessage.messageCode=4000;
-//				reMessage.content.put("filePath", fingerprintInfo.FilePath+fingerprintInfo.FileName);
-				reMes = "true  , file upload rapidly.";
-			}
-		}
-		else {
-			reMes="false";
-			reMessage.messageCode=4001;
-		}
-		reMessage.messageType=MessageType.REPLY_CHECK_REDUNDANCY;
-		LogRecord.FileHandleInfoLogger.info("BloomFilter check redundancy ["+figurePrint+"] "+reMes);
-		return reMessage;
-	}
-	/**
-	 * 处理添加指纹信息消息
-	 * @param mes
-	 * @return
-	 */
-	private MessageProtocol doAddFingerprintAction(MessageProtocol mes){
-		FingerprintInfo fInfo=(FingerprintInfo)mes.content;//new FingerprintInfo(figurePrint,filePath,fileName);
-		MessageProtocol reMessage=new MessageProtocol();
-		if(fInfo!=null) {
-			new FingerprintAdapter().saveFingerprint(fInfo);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter save a new fingerPrint to disk ["+fInfo.Md5+"]");
-			BloomFilter.getInstance().addFingerPrint(fInfo.Md5);
-			LogRecord.FileHandleInfoLogger.info("BloomFilter add a new fingerPrint ["+fInfo.Md5+"]");
-			reMessage.messageType=MessageType.REPLY_ADD_FINGERPRINT;
-			reMessage.messageCode=4000;
-			return reMessage;
-		}
+	private MessageProtocol doFindRedundancyAction(MessageProtocol mes){
+		FingerprintInfo fInfo=(FingerprintInfo)mes.content;
+		FingerprintInfo retFingerprintInfo=FileSystemStore.findFingerprintInfoByMD5(fInfo.getMd5());
+		sendFingerprintInfoToRedundancy(retFingerprintInfo);
+//		findRedundancySocketAction=new FindRedundancySocketAction(this,findRedundancyObject.fingerprintInfo);
+//		Thread thread = new Thread(findRedundancySocketAction);
+//		thread.start();
 		return null;
 	}
 
+	/**
+	 * 停止查找冗余文件消息的线程
+	 * @return
+	 */
+	private MessageProtocol doStopFindRedundancyAction(){
+//		findRedundancySocketAction.overThis();
+		overThis();
+		return null;
+	}
+	/**
+	 * 处理添加引用信息消息
+	 * @return
+	 */
+	private MessageProtocol doAddRedundancyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		RedundancyFileStoreInfo redundancyFileStoreInfo=(RedundancyFileStoreInfo)mes.content;
+		boolean re=FileSystemStore.addRedundancyFileStoreInfo(redundancyFileStoreInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4003;
+		reMes.messageType=MessageType.REPLY_ADD_REDUNDANCY_INFO;
+		return reMes;
+	}
+	/**
+	 * 处理删除引用信息消息
+	 * @return
+	 */
+	private MessageProtocol doDeleteRedundancyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		RedundancyFileStoreInfo redundancyFileStoreInfo=(RedundancyFileStoreInfo)mes.content;
+		boolean re=FileSystemStore.deleteRedundancyFileStoreInfo(redundancyFileStoreInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4007;
+		reMes.messageType=MessageType.REPLY_DELETE_REDUNDANCY_INFO;
+		return reMes;
+	}
+	/**
+	 * 处理添加元数据消息
+	 * @return
+	 */
+	private MessageProtocol doAddFingerprintAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+		//boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
+		boolean re=FileSystemStore.addFingerprintInfo(fingerprintInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4004;
+		reMes.messageType=MessageType.REPLY_ADD_FINGERPRINTINFO;
+		return reMes;
+	}
+	/**
+	 * 处理删除元数据消息
+	 * @return
+	 */
+	private MessageProtocol doDeleteFingerprintAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+		//boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
+		boolean re=FileSystemStore.deleteFingerprintInfo(fingerprintInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4009;
+		reMes.messageType=MessageType.REPLY_DELETE_FINGERPRINTINFO;
+		return reMes;
+	}
+	/**
+	 * 处理添加文件引用频率消息
+	 * @return
+	 */
+	private MessageProtocol doAddFrequencyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+//		FileReferenceInfo referenceInfo=new FileReferenceInfo();
+//		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
+		boolean re=FileSystemStore.addFileReferenceInfo(fingerprintInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4005;
+		reMes.messageType=MessageType.REPLY_ADD_FREQUENCY;
+		return reMes;
+	}
+	/**
+	 * 处理删除文件引用频率消息
+	 * @return
+	 */
+	private MessageProtocol doDeleteFrequencyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
+//		FileReferenceInfo referenceInfo=new FileReferenceInfo();
+//		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
+		boolean re=FileSystemStore.deleteFileReferenceInfo(fingerprintInfo);
+		if(re)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4008;
+		reMes.messageType=MessageType.REPLY_DELETE_FREQUENCY;
+		return reMes;
+	}
+	/**
+	 * 根据“相对路径”获取冗余文件信息
+	 * @return
+	 */
+	private MessageProtocol doGetRedundancyAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		String essentialStorePath=(String)mes.content;
+		ArrayList<FingerprintInfo> re=FileSystemStore.getRedundancyFileInfoByEssentialStorePath(essentialStorePath);
+		if(re!=null&&re.size()>0)
+			reMes.messageCode=4000;
+		else
+			reMes.messageCode=4006;
+		reMes.content=re;
+		reMes.messageType=MessageType.REPLY_GET_REDUNDANCY_INFO;
+		return reMes;
+	}
+	/**
+	 * 根据“相对路径”和文件名验证文件有效性
+	 * @return
+	 */
+	private MessageProtocol doValidateFileNamesAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		ArrayList<FingerprintInfo> fingerprintInfos=(ArrayList<FingerprintInfo>)mes.content;
+		ArrayList<FingerprintInfo> re=FileSystemStore.validateFileNames(fingerprintInfos);
+		reMes.messageCode=4000;
+		reMes.content=re;
+		reMes.messageType=MessageType.REPLY_VALIDATE_FILENAMES;
+		return reMes;
+	}
 	/**
 	 * 收到消息之后进行分类处理
 	 * @param mes
@@ -100,14 +195,44 @@ public class SocketAction implements Runnable {
 	 */
 	private MessageProtocol doAction(MessageProtocol mes){
 		switch (mes.messageType){
-			case CHECK_REDUNDANCY:{
-				return doCheckRedundancyAction(mes);
+			case FIND_REDUNDANCY:{
+				return doFindRedundancyAction(mes);
 			}
-			case ADD_FINGERPRINT:{
+			case STOP_FIND_REDUNDANCY:{
+				return doStopFindRedundancyAction();
+			}
+			case ADD_REDUNDANCY_INFO:{
+				return doAddRedundancyAction(mes);
+			}
+			case DELETE_REDUNDANCY_INFO:{
+				return doDeleteRedundancyAction(mes);
+			}
+			case ADD_FINGERPRINTINFO:{
 				return doAddFingerprintAction(mes);
+			}
+			case DELETE_FINGERPRINTINFO:{
+				return doDeleteFingerprintAction(mes);
+			}
+			case ADD_FREQUENCY:{
+				return doAddFrequencyAction(mes);
+			}
+			case DELETE_FREQUENCY:{
+				return doDeleteFrequencyAction(mes);
+			}
+			case GET_REDUNDANCY_INFO:{
+				return doGetRedundancyAction(mes);
+			}
+			case VALIDATE_FILENAMES:{
+				return doValidateFileNamesAction(mes);
 			}
 			case KEEP_ALIVE:{
 				LogRecord.RunningInfoLogger.info("receive handshake");
+				return null;
+			}
+			case GET_FINGERPRINT_LIST:{
+				return doGetFingerprintListAction(mes);
+			}
+			case SOCKET_MONITOR:{
 				return null;
 			}
 			default:{
@@ -116,7 +241,128 @@ public class SocketAction implements Runnable {
 		}
 
 	}
+	/**
+	 * 获取文件指纹列表信息
+	 * @return
+	 */
+	private MessageProtocol doGetFingerprintListAction(MessageProtocol mes){
+		String filePath= Config.SYSTEMCONFIG.FingerprintStorePath;//指纹信息的保存路径
+		String fileName=  Config.SYSTEMCONFIG.FingerprintName;
+		FileInputStream fin = null;
+		BufferedInputStream bis =null;
+		ObjectInputStream oip=null;
+		ArrayList<String> fingers=new ArrayList<String>();
+		int maxNum=100;//每次发送多少条
+		if(!CommonUtil.validateString(filePath)){
+			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
+			sendFingerprintListToRedundancy(fingers);
+//			overThis();
+			return null;
+		}
+		File file = new File(filePath);
+		if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
+			LogRecord.FileHandleErrorLogger.error("get Fingerprint error, can not find Fingerprint file.");
+			sendFingerprintListToRedundancy(fingers);
+//			overThis();//如果系统文件夹不存在或者指纹信息文件不存在
+			return null;
+		}
+		try{
+			LogRecord.RunningInfoLogger.info("start to load Fingerprint.");
+			fin = new FileInputStream(filePath+"/"+fileName);
+			bis = new BufferedInputStream(fin);
+			while (run) {
+				try {
+					oip = new ObjectInputStream(bis); // 每次重新构造对象输入流
+				}catch (EOFException e) {
+					// e.printStackTrace();
+//                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
 
+					//目的是一定要把指纹信息发送完毕
+					if(fingers.size()>0) {
+						sendFingerprintListToRedundancy(fingers);
+						fingers.clear();
+					}
+					break;
+				}
+				Object object =oip.readObject();
+				if (object instanceof FingerprintInfo) { // 判断对象类型
+					FingerprintInfo tmp=(FingerprintInfo)object;
+					fingers.add(tmp.getMd5());
+					if(fingers.size()>=maxNum){
+						sendFingerprintListToRedundancy(fingers);
+						fingers.clear();
+					}
+				}
+			}
+		} catch (FileNotFoundException e) {
+			overThis();
+			e.printStackTrace();
+		} catch (IOException e) {
+			overThis();
+			e.printStackTrace();
+		}catch (ClassNotFoundException e) {
+			overThis();
+			e.printStackTrace();
+		} finally {
+
+			//此处发送的一定是空集合，目的是告诉冗余验证服务器，指纹已经发送完毕
+			sendFingerprintListToRedundancy(fingers);
+			try {
+				if(oip!=null)
+					oip.close();
+				if(bis!=null)
+					bis.close();
+				if(fin!=null)
+					fin.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	/**
+	 * 给冗余验证服务器返回指纹信息列表
+	 */
+	public void sendFingerprintListToRedundancy(ArrayList<String> info){
+		MessageProtocol reMessage=new MessageProtocol();
+		reMessage.messageType=MessageType.REPLY_GET_FINGERPRINT_LIST;
+		reMessage.content=info;
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(
+					socket.getOutputStream());
+			oos.writeObject(reMessage);
+			oos.flush();
+			LogRecord.RunningInfoLogger.info("send REPLY_GET_FINGERPRINT_LIST, num="+info.size());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			overThis();
+		}
+	}
+	/**
+	 * 给冗余验证服务器返回查找元数据结果
+	 * @param fInfo
+	 */
+	public void sendFingerprintInfoToRedundancy(FingerprintInfo fInfo){
+		MessageProtocol reMessage=new MessageProtocol();
+		reMessage.messageType=MessageType.REPLY_FIND_REDUNDANCY;
+		reMessage.content=fInfo;
+		String str="null";
+		if(fInfo!=null){
+			str=fInfo.toString();
+		}
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(
+                    socket.getOutputStream());
+			oos.writeObject(reMessage);
+			oos.flush();
+			LogRecord.RunningInfoLogger.info("send REPLY_FIND_REDUNDANCY, FingerprintInfo="+str);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	public void run() {
 		while (run) {
 			// 超过接收延迟时间（毫秒）之后，终止此客户端的连接
@@ -128,7 +374,7 @@ public class SocketAction implements Runnable {
 					if (in.available() > 0) {
 						ObjectInputStream ois = new ObjectInputStream(in);
 						Object obj = ois.readObject();
-						MessageProtocol mes=(MessageProtocol)obj;
+						MessageProtocol mes = (MessageProtocol) obj;
 						lastReceiveTime = System.currentTimeMillis();
 						MessageProtocol out = doAction(mes);// 处理消息，并给客户端反馈
 						if (out != null) {
@@ -146,6 +392,7 @@ public class SocketAction implements Runnable {
 				}
 			}
 		}
+
 	}
 
 	/**

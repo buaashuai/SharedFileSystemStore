@@ -40,7 +40,7 @@ public class SocketAction implements Runnable {
 	}
 
 	/**
-	 * 启动处理查找冗余文件消息线程
+	 * 处理查找文件元数据消息
 	 * @param mes
 	 * @return
 	 */
@@ -64,7 +64,7 @@ public class SocketAction implements Runnable {
 		return null;
 	}
 	/**
-	 * 添加冗余文件信息
+	 * 处理添加引用信息消息
 	 * @return
 	 */
 	private MessageProtocol doAddRedundancyAction(MessageProtocol mes){
@@ -79,7 +79,7 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
-	 * 删除冗余文件信息
+	 * 处理删除引用信息消息
 	 * @return
 	 */
 	private MessageProtocol doDeleteRedundancyAction(MessageProtocol mes){
@@ -94,7 +94,7 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
-	 * 添加指纹信息
+	 * 处理添加元数据消息
 	 * @return
 	 */
 	private MessageProtocol doAddFingerprintAction(MessageProtocol mes){
@@ -110,7 +110,7 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
-	 * 删除指纹信息
+	 * 处理删除元数据消息
 	 * @return
 	 */
 	private MessageProtocol doDeleteFingerprintAction(MessageProtocol mes){
@@ -126,7 +126,7 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
-	 * 添加文件引用信息
+	 * 处理添加文件引用频率消息
 	 * @return
 	 */
 	private MessageProtocol doAddFrequencyAction(MessageProtocol mes){
@@ -143,7 +143,7 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
-	 * 删除文件引用信息
+	 * 处理删除文件引用频率消息
 	 * @return
 	 */
 	private MessageProtocol doDeleteFrequencyAction(MessageProtocol mes){
@@ -341,7 +341,7 @@ public class SocketAction implements Runnable {
 		}
 	}
 	/**
-	 * 给冗余验证服务器返回查找结果
+	 * 给冗余验证服务器返回查找元数据结果
 	 * @param fInfo
 	 */
 	public void sendFingerprintInfoToRedundancy(FingerprintInfo fInfo){

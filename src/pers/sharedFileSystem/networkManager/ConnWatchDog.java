@@ -10,7 +10,7 @@ import java.net.Socket;
 import java.util.Hashtable;
 
 /**
- * 监控新客户端连接的线程
+ * 监听新客户端连接的线程
  * 
  */
 public class ConnWatchDog implements Runnable {

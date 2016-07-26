@@ -44,7 +44,7 @@ public class FileSystemStore {
     }
 
     /**
-     * 添加冗余信息
+     * 添加文件引用信息
      * @param r
      */
     public static boolean addRedundancyFileStoreInfo(RedundancyFileStoreInfo r){
@@ -59,7 +59,7 @@ public class FileSystemStore {
         return  re;
     }
     /**
-     * 删除冗余信息
+     * 删除文件引用信息
      * @param r
      */
     public static boolean deleteRedundancyFileStoreInfo(RedundancyFileStoreInfo r){
@@ -80,13 +80,13 @@ public class FileSystemStore {
         return  re;
     }
     /**
-     * 根据“相对路径”获取冗余文件信息
+     * 根据“相对路径”获取文件引用信息
      */
     public static  ArrayList<FingerprintInfo> getRedundancyFileInfoByEssentialStorePath(String essentialStorePath){
         return redundancyFileMap.get(essentialStorePath);
     }
     /**
-     * 根据“相对路径”和文件名 验证文件有效性，
+     * 根据“相对路径”和文件名 验证文件有效性
      */
     public static  ArrayList<FingerprintInfo> validateFileNames(ArrayList<FingerprintInfo> fingerprintInfos){
         ArrayList<FingerprintInfo> res=new ArrayList<FingerprintInfo>();
@@ -100,7 +100,7 @@ public class FileSystemStore {
     }
 
     /**
-     * 添加文件引用
+     * 添加文件引用频率
      * @param fingerprintInfo 被添加引用的文件信息
      */
     public static boolean addFileReferenceInfo(FingerprintInfo fingerprintInfo){
@@ -110,7 +110,7 @@ public class FileSystemStore {
         return  re;
     }
     /**
-     * 删除文件引用
+     * 删除文件引用频率
      * @param fingerprintInfo 被删除引用的文件信息
      */
     public static boolean deleteFileReferenceInfo(FingerprintInfo fingerprintInfo){
@@ -146,7 +146,7 @@ public class FileSystemStore {
         return  re;
     }
     /**
-     * 添加文件指纹信息
+     * 添加文件元数据
      * @param fingerprintInfo 被添加引用的文件信息
      */
     public static boolean addFingerprintInfo(FingerprintInfo fingerprintInfo){

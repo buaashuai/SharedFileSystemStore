@@ -96,12 +96,13 @@ public class RedundantFileAdapter {
             return redundancyFileStoreInfos;
         }
         File file = new File(filePath);
-        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
-            LogRecord.FileHandleErrorLogger.error("can not find "+fileName);
+        String fullFilePath = filePath+"/"+fileName;
+        if (!file.isDirectory()||!new File(fullFilePath).exists()) {
+            LogRecord.FileHandleErrorLogger.error("file not found: "+fullFilePath);
             return redundancyFileStoreInfos;//如果系统文件夹不存在或者冗余信息文件不存在
         }
         try{
-            fin = new FileInputStream(filePath+"/"+fileName);
+            fin = new FileInputStream(fullFilePath);
             bis = new BufferedInputStream(fin);
             while (true) {
                 try {

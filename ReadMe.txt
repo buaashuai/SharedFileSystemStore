@@ -1,2 +1,2 @@
 I am master branch.
---V0.1
+- V1.0 实现了去冗管理

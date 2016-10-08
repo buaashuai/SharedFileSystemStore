@@ -184,18 +184,19 @@ public class FingerprintAdapter {
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
         String filePath=sysConfig.FingerprintStorePath;//指纹信息的保存路径
-        String fileName=sysConfig.FingerprintName;
+        String fileName=sysConfig.FingerprintName; // 指纹信息文件名
         if(!CommonUtil.validateString(filePath)){
             LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
             return fingerprintInfos;
         }
         File file = new File(filePath);
-        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
-            LogRecord.FileHandleErrorLogger.error("can not find "+fileName);
+        String fullFilePath = filePath+"/"+fileName;
+        if (!file.isDirectory()||!new File(fullFilePath).exists()) {
+            LogRecord.FileHandleErrorLogger.error("file not found: "+fullFilePath);
             return fingerprintInfos;//如果系统文件夹不存在或者指纹信息文件不存在
         }
         try{
-            fin = new FileInputStream(filePath+"/"+fileName);
+            fin = new FileInputStream(fullFilePath);
             bis = new BufferedInputStream(fin);
             while (true) {
                 try {

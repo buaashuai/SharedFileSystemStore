@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8d1ec864-595e-4917-8830-2934796e495f" name="Default" comment="删除">
+    <list default="true" id="8d1ec864-595e-4917-8830-2934796e495f" name="Default" comment="完善ignore，删除idea和target">
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="" />
@@ -31,69 +31,6 @@
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/FileConfig.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/FileConfig_back.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/META-INF/MANIFEST.MF" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/SystemConfig.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/log4j.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/FingerprintManager/FingerprintAdapter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/FingerprintManager/MessageCodeHandler.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/FingerprintManager/messageCode.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/BloomFilter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/ADDHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/APHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/BKDRHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/BernsteinHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/DEKHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/DJBHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/ELFHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/FNVHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/HashFunction.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/JSHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/MurmurHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/OneByOneHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/PJWHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/RSHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/Rabin64Hash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/RabinHashUtils.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/RotatingHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/SDBMHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/SHA1_MD5.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/TianlHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/bloomFilterManager/hashFunctions/ZendInlineHash.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/communicationObject/FingerprintInfo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/communicationObject/MessageProtocol.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/communicationObject/MessageType.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/configManager/Config.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/configManager/ConfigParse.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/convenientUtil/CommonUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/BackupNode.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/DirectoryNode.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/Feedback.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/FileType.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/FingerGenerateType.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/Node.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/NodeNameType.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/RedundancyInfo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/RuntimeType.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/ServerNode.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/entity/SystemConfig.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/exceptionManager/ErrorHandler.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/exceptionManager/errorcode.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/logManager/LogRecord.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/networkManager/ConnWatchDog.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/networkManager/FileSystemServer.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/networkManager/SocketAction$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/networkManager/SocketAction.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/systemFileManager/Common.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/systemFileManager/FingerprintAdapter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/systemFileManager/MessageCodeHandler.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/systemFileManager/messageCode.properties" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/test/ConfigTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/test/HashTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/test/JsonXmlTest$Item.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/test/JsonXmlTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/pers/sharedFileSystem/test/Test2.class" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
     </list>
     <list id="a6197c55-aa1d-4d9e-b874-ac79bc068b4d" name="Failed commit: Default" comment="test" />
@@ -129,8 +66,8 @@
       <file leaf-file-name="FileSystemStore.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FileSystemStore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="19" column="23" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="23" />
+            <state relative-caret-position="304">
+              <caret line="16" column="46" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -141,8 +78,8 @@
       <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+            <state relative-caret-position="171">
+              <caret line="9" column="15" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -153,7 +90,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="513">
               <caret line="32" column="31" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="31" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -163,7 +102,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="209">
               <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
-              <folding />
+              <folding>
+                <marker date="1475897031301" expanded="true" signature="52:694" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -193,7 +134,10 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="4598">
               <caret line="249" column="45" selection-start-line="249" selection-start-column="39" selection-end-line="249" selection-end-column="45" />
-              <folding />
+              <folding>
+                <element signature="imports" expanded="false" />
+                <element signature="e#7146#7154#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -203,7 +147,17 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="57">
               <caret line="3" column="35" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="35" />
-              <folding />
+              <folding>
+                <marker date="1475897031319" expanded="true" signature="57:514" ph="..." />
+                <marker date="1475897031319" expanded="true" signature="806:2753" ph="{...}" />
+                <marker date="1475897031319" expanded="true" signature="2759:2835" ph="/**...*/" />
+                <marker date="1475897031319" expanded="true" signature="2910:4318" ph="{...}" />
+                <marker date="1475897031319" expanded="true" signature="4324:4431" ph="/**...*/" />
+                <marker date="1475897031319" expanded="true" signature="4501:6394" ph="{...}" />
+                <marker date="1475897031319" expanded="true" signature="5379:5471" ph="//..." />
+                <marker date="1475897031319" expanded="true" signature="6510:8592" ph="{...}" />
+                <marker date="1475897031319" expanded="false" signature="6571:6588" ph="&lt;~&gt;" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -1069,14 +1023,7 @@
       <workItem from="1469551667382" duration="189000" />
       <workItem from="1475842412869" duration="5948000" />
       <workItem from="1475895553482" duration="1284000" />
-      <workItem from="1475896883795" duration="1342000" />
-    </task>
-    <task id="LOCAL-00032" summary="test">
-      <created>1446465018573</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1446465018573</updated>
+      <workItem from="1475896883795" duration="1613000" />
     </task>
     <task id="LOCAL-00033" summary="！！！修复了指纹信息管理类不能提交的问题。">
       <created>1446465257213</created>
@@ -1414,11 +1361,18 @@
       <option name="project" value="LOCAL" />
       <updated>1475897158115</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="完善ignore，删除idea和target">
+      <created>1475898403153</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1475898403153</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="481013000" />
+    <option name="totallyTimeSpent" value="481284000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="69" y="-9" width="1860" height="1098" extended-state="6" />
@@ -1479,6 +1433,10 @@
     <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
       <collection />
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="完善ignore，删除idea和target" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善ignore，删除idea和target" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1569,13 +1527,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="3" column="56" selection-start-line="3" selection-start-column="56" selection-end-line="3" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="2019" column="40" selection-start-line="2019" selection-start-column="40" selection-end-line="2019" selection-end-column="40" />
         </state>
       </provider>
     </entry>
@@ -1760,8 +1711,8 @@
         <state relative-caret-position="1406">
           <caret line="105" column="37" selection-start-line="105" selection-start-column="37" selection-end-line="105" selection-end-column="37" />
           <folding>
-            <element signature="e#1939#1940#0" expanded="true" />
-            <element signature="e#1991#1992#0" expanded="true" />
+            <element signature="e#1939#1940#0" expanded="false" />
+            <element signature="e#1991#1992#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1779,7 +1730,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="33" selection-start-line="0" selection-start-column="30" selection-end-line="0" selection-end-column="33" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1796,7 +1747,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="513">
           <caret line="32" column="31" selection-start-line="32" selection-start-column="25" selection-end-line="32" selection-end-column="31" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1804,7 +1757,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4598">
           <caret line="249" column="45" selection-start-line="249" selection-start-column="39" selection-end-line="249" selection-end-column="45" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#7146#7154#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1812,7 +1768,17 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
           <caret line="3" column="35" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="35" />
-          <folding />
+          <folding>
+            <marker date="1475897031319" expanded="true" signature="57:514" ph="..." />
+            <marker date="1475897031319" expanded="true" signature="806:2753" ph="{...}" />
+            <marker date="1475897031319" expanded="true" signature="2759:2835" ph="/**...*/" />
+            <marker date="1475897031319" expanded="true" signature="2910:4318" ph="{...}" />
+            <marker date="1475897031319" expanded="true" signature="4324:4431" ph="/**...*/" />
+            <marker date="1475897031319" expanded="true" signature="4501:6394" ph="{...}" />
+            <marker date="1475897031319" expanded="true" signature="5379:5471" ph="//..." />
+            <marker date="1475897031319" expanded="true" signature="6510:8592" ph="{...}" />
+            <marker date="1475897031319" expanded="false" signature="6571:6588" ph="&lt;~&gt;" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1838,7 +1804,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
           <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
-          <folding />
+          <folding>
+            <marker date="1475897031301" expanded="true" signature="52:694" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1847,16 +1815,6 @@
         <state relative-caret-position="19">
           <caret line="1" column="14" selection-start-line="1" selection-start-column="14" selection-end-line="1" selection-end-column="14" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FileSystemStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="23" selection-start-line="19" selection-start-column="23" selection-end-line="19" selection-end-column="23" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1876,10 +1834,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="1795" column="10" selection-start-line="1795" selection-start-column="10" selection-end-line="1795" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pers/sharedFileSystem/networkManager/FileSystemStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="16" column="46" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+        <state relative-caret-position="171">
+          <caret line="9" column="15" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
           <folding />
         </state>
       </provider>

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8d1ec864-595e-4917-8830-2934796e495f" name="Default" comment="完善ignore，删除idea和target">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/SharedFileSystemStore_jar.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_fusesource_sigar_1_6_4.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+    <list default="true" id="8d1ec864-595e-4917-8830-2934796e495f" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <list id="a6197c55-aa1d-4d9e-b874-ac79bc068b4d" name="Failed commit: Default" comment="test" />
@@ -50,8 +47,8 @@
       <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+            <state relative-caret-position="171">
+              <caret line="9" column="15" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -1009,14 +1006,7 @@
       <workItem from="1469551667382" duration="189000" />
       <workItem from="1475842412869" duration="5948000" />
       <workItem from="1475895553482" duration="1284000" />
-      <workItem from="1475896883795" duration="3873000" />
-    </task>
-    <task id="LOCAL-00034" summary="稍微修改日志">
-      <created>1446476638805</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1446476638805</updated>
+      <workItem from="1475896883795" duration="3907000" />
     </task>
     <task id="LOCAL-00035" summary="系统不能自动识别文件的类型的时候，根据用户上传的文件的后缀名去判断文件的类型。重构Feedback类，支持自定义反馈信息">
       <created>1446565188803</created>
@@ -1354,11 +1344,18 @@
       <option name="project" value="LOCAL" />
       <updated>1475898644197</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="完善ignore">
+      <created>1475904158029</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1475904158029</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="483544000" />
+    <option name="totallyTimeSpent" value="483578000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="69" y="-9" width="1860" height="1098" extended-state="6" />
@@ -1422,7 +1419,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="完善ignore，删除idea和target" />
-    <option name="LAST_COMMIT_MESSAGE" value="完善ignore，删除idea和target" />
+    <MESSAGE value="完善ignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善ignore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1838,8 +1836,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
+        <state relative-caret-position="171">
+          <caret line="9" column="15" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
           <folding />
         </state>
       </provider>

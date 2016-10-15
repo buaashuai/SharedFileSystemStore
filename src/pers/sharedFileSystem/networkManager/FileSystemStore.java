@@ -2,16 +2,18 @@ package pers.sharedFileSystem.networkManager;
 
 
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
+import pers.sharedFileSystem.communicationObject.MessageProtocol;
+import pers.sharedFileSystem.communicationObject.MessageType;
 import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
-import pers.sharedFileSystem.entity.DirectoryNode;
-import pers.sharedFileSystem.entity.Node;
-import pers.sharedFileSystem.entity.ServerNode;
+import pers.sharedFileSystem.convenientUtil.CommonUtil;
+import pers.sharedFileSystem.entity.*;
 import pers.sharedFileSystem.logManager.LogRecord;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 import pers.sharedFileSystem.systemFileManager.RedundantFileAdapter;
 
-import java.io.File;
+import java.io.*;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +23,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class FileSystemStore {
 
+    /**
+     * 存储端和冗余验证服务器之间的socket连接
+     */
+    private static  Socket socket;
+
+    private static SystemConfig systemConfig = Config.SYSTEMCONFIG;
     /**
      * 相对路径到冗余文件列表的映射
      */
@@ -43,6 +51,26 @@ public class FileSystemStore {
         return fingerprintInfoMap.get(md5);
     }
 
+    /**
+     * 将一个消息对象发送给冗余验证服务器
+     *
+     */
+    public static void sendMessageToRedundancyServer(MessageProtocol mes) throws IOException {
+        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+        oos.writeObject(mes);
+        oos.flush();
+    }
+    /**
+     * 重新建立存储端和冗余验证服务器之间的socket连接
+     */
+    public static void restartConnectToRedundancyServer(){
+        try {
+            LogRecord.RunningErrorLogger.error("attempt to reconnect to redundancy server.");
+            socket = new Socket(systemConfig.ClusterServerIp, systemConfig.ClusterServerPort);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 添加文件引用信息
      * @param r
@@ -193,6 +221,109 @@ public class FileSystemStore {
         }
         return  re;
     }
+
+    /**
+     * 把config信息发给集群管理子系统
+     */
+    private void sendConfigInfo(){
+        MessageProtocol mes=new MessageProtocol();
+        mes.messageType= MessageType.SEND_CONFIG;
+        mes.senderType = SenderType.STORE;
+        mes.content = Config.getConfig().elements().nextElement();// 获取配置文件中的第一个server结点
+        try {
+            LogRecord.RunningInfoLogger.info("send SEND_CONFIG comand to "+systemConfig.ClusterServerIp+":"+systemConfig.ClusterServerPort);
+            sendMessageToRedundancyServer(mes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 给冗余验证服务器返回指纹信息列表
+     */
+    private void sendFingerprintListToRedundancy(ArrayList<String> info){
+        MessageProtocol mes=new MessageProtocol();
+        mes.messageType=MessageType.SEND_FINGERPRINT_LIST;
+        mes.senderType = SenderType.STORE;
+        mes.content=info;
+        try {
+            LogRecord.RunningInfoLogger.info("send SEND_FINGERPRINT_LIST, num="+info.size());
+            sendMessageToRedundancyServer(mes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 把指纹信息发给集群管理子系统
+     */
+    private void sendFigureprintInfo(){
+        String filePath= systemConfig.FingerprintStorePath;//指纹信息的保存路径
+        String fileName=  systemConfig.FingerprintName;
+        FileInputStream fin = null;
+        BufferedInputStream bis =null;
+        ObjectInputStream oip=null;
+        ArrayList<String> fingers=new ArrayList<String>();
+        int maxNum=100;//每次发送多少条
+        if(!CommonUtil.validateString(filePath)){
+            LogRecord.FileHandleErrorLogger.error("get Fingerprint error, filePath is null.");
+            return;
+        }
+        File file = new File(filePath);
+        if (!file.isDirectory()||!new File(filePath+"/"+fileName).exists()) {
+            LogRecord.FileHandleErrorLogger.error("get Fingerprint error, can not find Fingerprint file.");
+            return;
+        }
+        boolean run = true;
+        try{
+            LogRecord.RunningInfoLogger.info("start to load Fingerprint.");
+            fin = new FileInputStream(filePath+"/"+fileName);
+            bis = new BufferedInputStream(fin);
+            while (run) {
+                try {
+                    oip = new ObjectInputStream(bis); // 每次重新构造对象输入流
+                }catch (EOFException e) {
+                    // e.printStackTrace();
+//                    System.out.println("已达文件末尾");// 如果到达文件末尾，则退出循环
+
+                    //目的是一定要把指纹信息发送完毕
+                    if(fingers.size()>0) {
+                        sendFingerprintListToRedundancy(fingers);
+                        fingers.clear();
+                    }
+                    break;
+                }
+                Object object =oip.readObject();
+                if (object instanceof FingerprintInfo) { // 判断对象类型
+                    FingerprintInfo tmp=(FingerprintInfo)object;
+                    fingers.add(tmp.getMd5());
+                    if(fingers.size()>=maxNum){
+                        sendFingerprintListToRedundancy(fingers);
+                        fingers.clear();
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            //此处发送的一定是空集合，目的是告诉冗余验证服务器，指纹已经发送完毕
+            sendFingerprintListToRedundancy(fingers);
+            try {
+                if(oip!=null)
+                    oip.close();
+                if(bis!=null)
+                    bis.close();
+                if(fin!=null)
+                    fin.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * 初始化
      */
@@ -219,13 +350,21 @@ public class FileSystemStore {
         }
         LogRecord.RunningInfoLogger.info("load RedundancyFileStoreInfo successful. total= "+redundancyFileStoreInfos.size());
 
-//        LogRecord.RunningInfoLogger.info("start load FileReferenceInfo.");
-//        fileReferenceInfoMap=new ConcurrentHashMap<String,FileReferenceInfo>();
-//        List<FileReferenceInfo>fileReferenceInfos= FileReferenceAdapter.getAllFileReferenceInfo();
-//        for(FileReferenceInfo info:fileReferenceInfos){
-//            fileReferenceInfoMap.put(info.Path,info);
-//        }
-//        LogRecord.RunningInfoLogger.info("load FileReferenceInfo successful. total= "+fileReferenceInfos.size());
+        // 与集群管理服务器建立连接
+        try {
+            socket = new Socket(systemConfig.ClusterServerIp, systemConfig.ClusterServerPort);
+            // 把config和指纹信息发过去
+            sendConfigInfo();
+            // 把指纹信息发送过去
+            sendFigureprintInfo();
+
+            KeepAliveWatchRedundancy k1 = new KeepAliveWatchRedundancy();
+            Thread t1 = new Thread(k1);
+            t1.start();
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            LogRecord.RunningErrorLogger.error(e.toString());
+        }
     }
 
     public FileSystemStore() {

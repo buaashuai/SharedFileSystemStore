@@ -9,6 +9,14 @@ public class SystemConfig {
      */
     public Integer Port;
     /**
+     * 集群管理子系统的IP地址
+     */
+    public String ClusterServerIp;
+    /**
+     * 集群管理子系统的端口
+     */
+    public Integer ClusterServerPort;
+    /**
      * 指纹信息存储路径
      */
     public String FingerprintStorePath;
@@ -40,5 +48,7 @@ public class SystemConfig {
         System.out.println(tabs + "FingerprintName: " + FingerprintName);
         System.out.println(tabs + "RedundancyFileStorePath: " + RedundancyFileStorePath);
         System.out.println(tabs + "RedundancyFileName: " + RedundancyFileName);
+        System.out.println(tabs + "ClusterServerIp: " + ClusterServerIp);
+        System.out.println(tabs + "ClusterServerPort: " + ClusterServerPort);
     }
 }

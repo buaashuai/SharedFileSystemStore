@@ -37,22 +37,6 @@ public class ConfigParse {
         return types;
     }
 
-    /**
-     * 解析目录结点的区间属性
-     * @param element IntervalProperty节点的dom对象
-     * @return 解析之后的IntervalProperty对象
-     */
-    private IntervalProperty parseIntervalProperty(Element element,NodeNameType nameType) {
-        IntervalProperty interval=new IntervalProperty();
-        String min = element.getChildText("min");
-        String max = element.getChildText("max");
-        String directoryNodeId = element.getChildText("directoryNodeId");
-        if(nameType==NodeNameType.DYNAMIC)
-            interval.Min=min;
-        interval.Max=max;
-        interval.DirectoryNodeId=directoryNodeId;
-        return  interval;
-    }
 
     /**
      * 对配置文件中的redundancy节点进行解析
@@ -64,15 +48,6 @@ public class ConfigParse {
         RedundancyInfo redundancyInfo = new RedundancyInfo();
         redundancyInfo.Switch = element.getAttributeValue("switch")
                 .equals("on") ? true : false;
-        String maxElement = element.getChildText("maxElement");
-        String falsePositiveRate = element.getChildText("falsePositiveRate");
-        if (CommonUtil.validateString(maxElement)) {
-            redundancyInfo.MaxElementNum = Double.parseDouble(maxElement);
-        }
-        if (CommonUtil.validateString(falsePositiveRate)) {
-            redundancyInfo.FalsePositiveRate = Double
-                    .parseDouble(falsePositiveRate);
-        }
         Element figure = element.getChild("fingerGenType");
         if (figure != null) {
             if (figure.getAttributeValue("type").equals(
@@ -134,17 +109,6 @@ public class ConfigParse {
             // 解析节点的删冗信息
             directoryNode.Redundancy = parseRedundancyInfo(e_redundancy);
         }
-        List<Element> e_expands = element.getChildren("interval");
-        if (e_expands != null) {
-            List<IntervalProperty>Intervals= new ArrayList<IntervalProperty>();
-            IntervalProperty interval;
-            // 解析节点的扩展区间信息
-            for (Element e : e_expands) {
-                interval=parseIntervalProperty(e,directoryNode.NameType);
-                Intervals.add(interval);
-            }
-            directoryNode.Intervals = Intervals;
-        }
         String m_whiteList = element.getChildText("whiteList");
         if (CommonUtil.validateString(m_whiteList)) {
             directoryNode.WhiteList = parseFileTypes(m_whiteList);
@@ -168,21 +132,6 @@ public class ConfigParse {
     }
 
     /**
-     *
-     * @param element backupNode节点的dom对象
-     * @return 解析之后的BackupNode对象
-     */
-    private BackupNode parseBackupNode(Element element){
-        BackupNode backupNode=new BackupNode();
-        backupNode.Ip = element.getChildText("ip");
-        backupNode.Port = Integer.parseInt(element.getChildText("port"));
-        backupNode.ServerPort = Integer.parseInt(element.getChildText("serverPort"));
-        backupNode.Id = element.getAttributeValue("id");
-        backupNode.UserName = element.getChildText("userName");
-        backupNode.Password = element.getChildText("password");
-        return backupNode;
-    }
-    /**
      * 对配置文件中的ServerNode节点进行解析
      *
      * @param element serverNode 节点的dom对象
@@ -191,7 +140,6 @@ public class ConfigParse {
     private ServerNode parseServerNode(Element element) {
         ServerNode serverNode = new ServerNode();
         Hashtable<String, DirectoryNode> directoryNodeTable = new Hashtable<String, DirectoryNode>();
-        Hashtable<String, BackupNode>backupNodeTable = new Hashtable<String, BackupNode>();
         serverNode.Ip = element.getChildText("ip");
         serverNode.Port = Integer.parseInt(element.getChildText("port"));
         serverNode.ServerPort = Integer.parseInt(element.getChildText("serverPort"));
@@ -201,7 +149,6 @@ public class ConfigParse {
         serverNode.Password = element.getChildText("password");
         serverNode.URL = element.getChildText("url");
         List<Element> e_directoryNodes = element.getChildren("directoryNode");
-        List<Element> e_backupNodes = element.getChildren("backupNode");
         List<DirectoryNode> childNodes = new ArrayList<DirectoryNode>();
         for (Element e : e_directoryNodes) {
             DirectoryNode directoryNode = new DirectoryNode();
@@ -210,12 +157,7 @@ public class ConfigParse {
                     serverNode,"",serverNode);
             childNodes.add(directoryNode);
         }
-        for(Element e:e_backupNodes){
-            BackupNode backupNode=parseBackupNode(e);
-            backupNodeTable.put(backupNode.Id,backupNode);
-        }
         serverNode.DirectoryNodeTable = directoryNodeTable;
-        serverNode.BackupNodeTable=backupNodeTable;
         serverNode.ChildNodes = childNodes;
         return serverNode;
     }
@@ -281,10 +223,6 @@ public class ConfigParse {
             DirectoryNode dNode=(DirectoryNode)node;
             if(dNode.Redundancy.Switch) {
                 serverRedundancy.Switch = true;
-                //最大存储元素数累加
-                serverRedundancy.MaxElementNum += dNode.Redundancy.MaxElementNum;
-                //误报率取子节点中的最小值
-                serverRedundancy.FalsePositiveRate = Math.min(serverRedundancy.FalsePositiveRate, dNode.Redundancy.FalsePositiveRate);
                 return;
             }
         }
@@ -338,6 +276,8 @@ public class ConfigParse {
         Element element = doc.getRootElement();
         SystemConfig systemConfig = new SystemConfig();
         systemConfig.Port = Integer.parseInt(element.getChildText("port"));
+        systemConfig.ClusterServerIp = element.getChildText("clusterServerIp");
+        systemConfig.ClusterServerPort = Integer.parseInt(element.getChildText("clusterServerPort"));
         systemConfig.FingerprintStorePath = element.getChildText("fingerprintStorePath");
         systemConfig.RedundancyFileStorePath = element.getChildText("redundancyFileStorePath");
         systemConfig.FingerprintName = element.getChildText("fingerprintName");

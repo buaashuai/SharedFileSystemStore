@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import pers.sharedFileSystem.communicationObject.*;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
+import pers.sharedFileSystem.entity.SenderType;
 import pers.sharedFileSystem.logManager.LogRecord;
 
 /**
@@ -226,12 +227,15 @@ public class SocketAction implements Runnable {
 				return doValidateFileNamesAction(mes);
 			}
 			case KEEP_ALIVE:{
-				LogRecord.RunningInfoLogger.info("receive handshake");
+				if(mes.senderType == SenderType.CLIENT)
+					LogRecord.RunningInfoLogger.info("client handshake "+socket.getInetAddress().toString());
+				else if(mes.senderType == SenderType.STORE)
+					LogRecord.RunningInfoLogger.info("store handshake "+socket.getInetAddress().toString());
 				return null;
 			}
-			case GET_FINGERPRINT_LIST:{
-				return doGetFingerprintListAction(mes);
-			}
+//			case GET_FINGERPRINT_LIST:{
+//				return doGetFingerprintListAction(mes);
+//			}
 			case SOCKET_MONITOR:{
 				return null;
 			}
@@ -325,7 +329,7 @@ public class SocketAction implements Runnable {
 	 */
 	public void sendFingerprintListToRedundancy(ArrayList<String> info){
 		MessageProtocol reMessage=new MessageProtocol();
-		reMessage.messageType=MessageType.REPLY_GET_FINGERPRINT_LIST;
+//		reMessage.messageType=MessageType.REPLY_GET_FINGERPRINT_LIST;
 		reMessage.content=info;
 		ObjectOutputStream oos = null;
 		try {

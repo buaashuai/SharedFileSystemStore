@@ -27,14 +27,6 @@ public class ServerNode extends Node implements Serializable {
 	 */
 	public Hashtable<String, DirectoryNode> DirectoryNodeTable;
 	/**
-	 * ServerNode包含的节点id和备份节点对象的映射（此字段暂时无用）
-	 */
-	public Hashtable<String,BackupNode>BackupNodeTable;
-	/**
-	 * 默认使用的备份节点编号（此字段暂时无用）
-	 */
-	public String BackupNodeId;
-	/**
 	 * ServerNode服务器的用户名
 	 */
 	public String UserName;
@@ -77,14 +69,6 @@ public class ServerNode extends Node implements Serializable {
 				System.out.println("");
 			num++;
 			directoryNode.print(tabs + "\t");
-		}
-		System.out.println(tabs + "BackupNodeTable: "+BackupNodeTable.size());
-		num=0;
-		for(BackupNode backupNode:BackupNodeTable.values()){
-			if(num>0)
-				System.out.println("");
-			num++;
-			backupNode.print(tabs+"\t");
 		}
 	}
 }

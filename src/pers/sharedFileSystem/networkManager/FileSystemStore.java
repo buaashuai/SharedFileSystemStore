@@ -353,6 +353,10 @@ public class FileSystemStore {
         // 与集群管理服务器建立连接
         try {
             socket = new Socket(systemConfig.ClusterServerIp, systemConfig.ClusterServerPort);
+            // 与集群管理服务器建立连接之后，开启线程监听集群管理服务器发来的消息
+            SocketAction socketAction = new SocketAction(socket);
+            Thread thread = new Thread(socketAction);
+            thread.start();
             // 把config和指纹信息发过去
             sendConfigInfo();
             // 把指纹信息发送过去

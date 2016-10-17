@@ -14,7 +14,7 @@ import java.lang.management.ManagementFactory;
 /**
  * 存储服务器运行状态
  */
-public class ServerState  extends SigarCommandBase {
+public class ServerStateUtil extends SigarCommandBase {
     private boolean displayTimes = true;
     private static double cpu;
 
@@ -45,11 +45,11 @@ public class ServerState  extends SigarCommandBase {
         return  diskPercentage;
     }
 
-    public ServerState(Shell shell) {
+    public ServerStateUtil(Shell shell) {
         super(shell);
     }
 
-    public ServerState() {
+    public ServerStateUtil() {
         super();
     }
 
@@ -71,7 +71,7 @@ public class ServerState  extends SigarCommandBase {
     public double getCpuState(){
         String[] args = new String[0];
         try {
-            new ServerState().processCommand(args);
+            new ServerStateUtil().processCommand(args);
         } catch (ShellCommandUsageException e) {
             e.printStackTrace();
         } catch (ShellCommandExecException e) {
@@ -94,7 +94,7 @@ public class ServerState  extends SigarCommandBase {
     }
 
     public static void main(String[] args) {
-        ServerState serverState=new ServerState();
+        ServerStateUtil serverState=new ServerStateUtil();
         System.out.println("内存占用率：" +serverState.getMemoryState()+ "%");
         System.out.println("磁盘占用率：" +serverState.getDiskState()+ "%");
         System.out.println("CPU占用率：" +serverState.getCpuState()+ "%");

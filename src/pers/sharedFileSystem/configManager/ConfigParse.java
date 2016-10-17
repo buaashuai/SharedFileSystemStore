@@ -282,6 +282,9 @@ public class ConfigParse {
         systemConfig.RedundancyFileStorePath = element.getChildText("redundancyFileStorePath");
         systemConfig.FingerprintName = element.getChildText("fingerprintName");
         systemConfig.RedundancyFileName = element.getChildText("redundancyFileName");
+        systemConfig.ExpandFileStorePath = element.getChildText("expandFileStorePath");
+        systemConfig.ExpandFileName = element.getChildText("expandFileName");
+        systemConfig.ExpandCriticalValue = Double.parseDouble(element.getChildText("expandCriticalValue"));
 
         Config.SYSTEMCONFIG = systemConfig;
     }

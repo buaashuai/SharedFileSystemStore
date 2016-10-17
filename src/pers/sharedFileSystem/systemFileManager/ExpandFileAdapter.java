@@ -1,5 +1,6 @@
 package pers.sharedFileSystem.systemFileManager;
 
+import pers.sharedFileSystem.communicationObject.ExpandFileStoreInfo;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
@@ -15,29 +16,29 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 冗余文件存储信息操作类
+ * 结点扩容信息文件存储信息操作类
  */
-public class RedundantFileAdapter {
+public class ExpandFileAdapter {
     private static SystemConfig sysConfig=Config.SYSTEMCONFIG;
     /**
-     * 按照序列化的方式将冗余文件存储信息保存到磁盘(保存全部信息)
+     * 按照序列化的方式将结点扩容信息文件存储信息保存到磁盘(保存全部信息)
      */
-    public static boolean saveRedundancyFileStoreInfo(ConcurrentHashMap<String,ArrayList<FingerprintInfo>> redundancyFileMap){
+    public static boolean saveAllExpandInfo(ConcurrentHashMap<String,ArrayList<String>> expandFileMap){
         FileOutputStream fout=null;
         ObjectOutputStream sout =null;
-        String filePath=sysConfig.RedundancyFileStorePath;//冗余文件信息的保存路径
-        String fileName=sysConfig.RedundancyFileName;
+        String filePath=sysConfig.ExpandFileStorePath;//结点扩容信息文件的保存路径
+        String fileName=sysConfig.ExpandFileName;
         if(!CommonUtil.validateString(filePath)){
-            LogRecord.FileHandleErrorLogger.error("save Redundant error, filePath is null.");
+            LogRecord.FileHandleErrorLogger.error("save ExpandInfo error, filePath is null.");
             return false;
         }
         File file = new File(filePath);
         if (!file.exists() && !file.isDirectory()) {
-            LogRecord.RunningErrorLogger.error("save Redundant error, filePath illegal.");
+            LogRecord.RunningErrorLogger.error("save ExpandInfo error, filePath illegal.");
             return false;
         }
         File oldFile=new File(filePath+"/"+fileName);
-        File tempFile=new File(filePath+"/"+ Constant.RedundancyTempFileName);
+        File tempFile=new File(filePath+"/"+ Constant.ExpandTempFileName);
         if(oldFile.exists()){
             oldFile.renameTo(tempFile);
         }
@@ -45,15 +46,15 @@ public class RedundantFileAdapter {
         try{
             fout = new FileOutputStream(filePath + "/" + fileName, true);
             int num=0;
-           for(String key:redundancyFileMap.keySet()) {
-               sout = new ObjectOutputStream(fout);
-               RedundancyFileStoreInfo redundancyFileStoreInfo=new RedundancyFileStoreInfo();
-               redundancyFileStoreInfo.essentialStorePath=key;
-               redundancyFileStoreInfo.otherFileInfo=redundancyFileMap.get(key);
-               sout.writeObject(redundancyFileStoreInfo);
-               num++;
-           }
-            LogRecord.RunningInfoLogger.info("save RedundancyFileStoreInfo successful. total="+num);
+            for(String key:expandFileMap.keySet()) {
+                sout = new ObjectOutputStream(fout);
+                ExpandFileStoreInfo expandFileStoreInfo=new ExpandFileStoreInfo();
+                expandFileStoreInfo.directoryNodeId=key;
+                expandFileStoreInfo.expandNodeList=expandFileMap.get(key);
+                sout.writeObject(expandFileStoreInfo);
+                num++;
+            }
+            LogRecord.RunningInfoLogger.info("save ExpandFileStoreInfo successful. total="+num);
         }catch (FileNotFoundException e){
             e.printStackTrace();
             return false;
@@ -82,24 +83,24 @@ public class RedundantFileAdapter {
     }
 
     /**
-     * 按照序列化的方式获取全部冗余文件存储信息
+     * 按照序列化的方式获取全部结点扩容信息文件存储信息
      * @return
      */
-    public static List<RedundancyFileStoreInfo> getAllRedundancyFileStoreInfo(){
-        List<RedundancyFileStoreInfo>redundancyFileStoreInfos=new ArrayList<RedundancyFileStoreInfo>();
+    public static List<ExpandFileStoreInfo> getAllRedundancyFileStoreInfo(){
+        List<ExpandFileStoreInfo>redundancyFileStoreInfos=new ArrayList<ExpandFileStoreInfo>();
         FileInputStream fin = null;
         BufferedInputStream bis =null;
         ObjectInputStream oip=null;
-        String filePath=sysConfig.RedundancyFileStorePath;//冗余文件信息的保存路径
-        String fileName=sysConfig.RedundancyFileName;
+        String filePath=sysConfig.ExpandFileStorePath;//结点扩容信息文件信息的保存路径
+        String fileName=sysConfig.ExpandFileName;
         if(!CommonUtil.validateString(filePath)){
-            LogRecord.FileHandleErrorLogger.error("get Redundant error, filePath is null.");
+            LogRecord.FileHandleErrorLogger.error("get ExpandFile error, filePath is null.");
             return redundancyFileStoreInfos;
         }
         File file = new File(filePath);
         String fullFilePath = filePath+"/"+fileName;
         if (!file.isDirectory()||!new File(fullFilePath).exists()) {
-            LogRecord.FileHandleErrorLogger.error("file not found: "+fullFilePath);
+            LogRecord.FileHandleErrorLogger.error("ExpandFile not found: "+fullFilePath);
             return redundancyFileStoreInfos;//如果系统文件夹不存在或者冗余信息文件不存在
         }
         try{
@@ -114,8 +115,8 @@ public class RedundantFileAdapter {
                     return redundancyFileStoreInfos;
                 }
                 Object object =oip.readObject();
-                if (object instanceof RedundancyFileStoreInfo) { // 判断对象类型
-                    redundancyFileStoreInfos.add((RedundancyFileStoreInfo) object);
+                if (object instanceof ExpandFileStoreInfo) { // 判断对象类型
+                    redundancyFileStoreInfos.add((ExpandFileStoreInfo) object);
                 }
             }
         } catch (FileNotFoundException e) {

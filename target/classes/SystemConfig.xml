@@ -5,8 +5,8 @@
 		<redundancyFileStorePath>E:/ftp</redundancyFileStorePath><!--冗余信息文件保存路径 -->
 		<redundancyFileName>Redundancy_store.sys</redundancyFileName><!--冗余信息文件名 -->
         <port>9996</port><!-- 本地存储服务器的文件系统监听端口 -->
-        <espandStorePath>E:/ftp</espandStorePath><!--结点扩容信息文件保存路径 -->
-        <expandName>Fingerprint_store.sys</expandName><!--指纹信息文件名 -->
+        <expandFileStorePath>E:/ftp</expandFileStorePath><!--结点扩容信息文件保存路径 -->
+        <expandFileName>Expand_store.sys</expandFileName><!--结点扩容信息文件名 -->
 		<clusterServerIp>127.0.0.1</clusterServerIp><!-- 集群管理系统的Ip地址-->
 		<clusterServerPort>9998</clusterServerPort><!-- 集群管理系统的监听端 口-->
 </SystemConfig>

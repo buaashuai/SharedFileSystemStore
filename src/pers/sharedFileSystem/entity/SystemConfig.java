@@ -32,6 +32,18 @@ public class SystemConfig {
      * 冗余信息文件名
      */
     public String RedundancyFileName;
+    /**
+     * 结点扩容信息文件保存路径
+     */
+    public String ExpandFileStorePath;
+    /**
+     * 结点扩容信息文件名
+     */
+    public String ExpandFileName;
+    /**
+     * 存储目录扩容临界值，磁盘的存储空间利用率在大于此值的时候对给磁盘下的存储目录进行逻辑扩容
+     */
+    public double ExpandCriticalValue;
 
     public SystemConfig(){
 
@@ -50,5 +62,8 @@ public class SystemConfig {
         System.out.println(tabs + "RedundancyFileName: " + RedundancyFileName);
         System.out.println(tabs + "ClusterServerIp: " + ClusterServerIp);
         System.out.println(tabs + "ClusterServerPort: " + ClusterServerPort);
+        System.out.println(tabs + "ExpandFileStorePath: " + ExpandFileStorePath);
+        System.out.println(tabs + "ExpandFileName: " + ExpandFileName);
+        System.out.println(tabs + "ExpandCriticalValue: " + ExpandCriticalValue);
     }
 }

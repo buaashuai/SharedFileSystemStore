@@ -7,13 +7,16 @@ import java.util.ArrayList;
 import pers.sharedFileSystem.communicationObject.*;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
+import pers.sharedFileSystem.convenientUtil.ServerStateUtil;
 import pers.sharedFileSystem.entity.SenderType;
+import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 
 /**
  * 监控某个连接（客户端或者存储服务器）发来的消息
  */
 public class SocketAction implements Runnable {
+	private SystemConfig sysConfig=Config.SYSTEMCONFIG;
 	/**
 	 * 监听的连接
 	 */
@@ -76,6 +79,7 @@ public class SocketAction implements Runnable {
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4003;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_ADD_REDUNDANCY_INFO;
 		return reMes;
 	}
@@ -91,6 +95,7 @@ public class SocketAction implements Runnable {
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4007;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_DELETE_REDUNDANCY_INFO;
 		return reMes;
 	}
@@ -107,6 +112,7 @@ public class SocketAction implements Runnable {
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4004;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_ADD_FINGERPRINTINFO;
 		return reMes;
 	}
@@ -123,6 +129,7 @@ public class SocketAction implements Runnable {
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4009;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_DELETE_FINGERPRINTINFO;
 		return reMes;
 	}
@@ -140,6 +147,7 @@ public class SocketAction implements Runnable {
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4005;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_ADD_FREQUENCY;
 		return reMes;
 	}
@@ -157,6 +165,7 @@ public class SocketAction implements Runnable {
 			reMes.messageCode=4000;
 		else
 			reMes.messageCode=4008;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_DELETE_FREQUENCY;
 		return reMes;
 	}
@@ -173,6 +182,7 @@ public class SocketAction implements Runnable {
 		else
 			reMes.messageCode=4006;
 		reMes.content=re;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_GET_REDUNDANCY_INFO;
 		return reMes;
 	}
@@ -186,7 +196,42 @@ public class SocketAction implements Runnable {
 		ArrayList<FingerprintInfo> re=FileSystemStore.validateFileNames(fingerprintInfos);
 		reMes.messageCode=4000;
 		reMes.content=re;
+		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_VALIDATE_FILENAMES;
+		return reMes;
+	}
+	/**
+	 * 获取存储服务器的运行状态
+	 * @return
+	 */
+	private MessageProtocol doGetServerStateAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		ServerStateUtil serverStateUtil=new ServerStateUtil();
+		ServerState serverState = new ServerState();
+		serverState.MemoryState = serverStateUtil.getMemoryState();
+		serverState.DiskState = serverStateUtil.getDiskState();
+		serverState.CpuState = serverStateUtil.getCpuState();
+		reMes.messageCode=4000;
+		reMes.content=serverState;
+		reMes.senderType=SenderType.STORE;
+		reMes.messageType=MessageType.REPLY_GET_SERVER_STATE;
+		return reMes;
+	}
+	/**
+	 *  判断某个存储目录是否需要扩容
+	 * @return
+	 */
+	private MessageProtocol doIfDirectoryNeedExpandAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		ServerStateUtil serverStateUtil=new ServerStateUtil();
+		double diskState = serverStateUtil.getDiskState();
+		reMes.content=0; // 不需要扩容
+		if(sysConfig.ExpandCriticalValue * 100 <= diskState){
+			reMes.content=1; // 需要扩容
+		}
+		reMes.messageCode=4000;
+		reMes.senderType=SenderType.STORE;
+		reMes.messageType=MessageType.REPLY_GET_SERVER_STATE;
 		return reMes;
 	}
 	/**
@@ -233,9 +278,12 @@ public class SocketAction implements Runnable {
 					LogRecord.RunningInfoLogger.info("store handshake "+socket.getInetAddress().toString());
 				return null;
 			}
-//			case GET_FINGERPRINT_LIST:{
-//				return doGetFingerprintListAction(mes);
-//			}
+			case GET_SERVER_STATE:{
+				return doGetServerStateAction(mes);
+			}
+			case IF_DIRECTORY_NEED_EXPAND:{
+				return doIfDirectoryNeedExpandAction(mes);
+			}
 			case SOCKET_MONITOR:{
 				return null;
 			}
@@ -352,6 +400,7 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMessage=new MessageProtocol();
 		reMessage.messageType=MessageType.REPLY_FIND_REDUNDANCY;
 		reMessage.content=fInfo;
+		reMessage.senderType=SenderType.STORE;
 		String str="null";
 		if(fInfo!=null){
 			str=fInfo.toString();

@@ -27,6 +27,10 @@ public class FileSystemStore {
      * 存储端和冗余验证服务器之间的socket连接
      */
     private static  Socket socket;
+    /**
+     * 监听集群管理服务器发来的消息
+     */
+    private  static SocketAction socketAction;
 
     private static SystemConfig systemConfig = Config.SYSTEMCONFIG;
     /**
@@ -59,6 +63,9 @@ public class FileSystemStore {
         ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
         oos.writeObject(mes);
         oos.flush();
+        if(socketAction !=null) {
+            socketAction.refreshLastReceiveTime();
+        }
     }
     /**
      * 重新建立存储端和冗余验证服务器之间的socket连接
@@ -67,6 +74,10 @@ public class FileSystemStore {
         try {
             LogRecord.RunningErrorLogger.error("attempt to reconnect to redundancy server.");
             socket = new Socket(systemConfig.ClusterServerIp, systemConfig.ClusterServerPort);
+            // 把config和指纹信息发过去
+            sendConfigInfo();
+            // 把指纹信息发送过去
+            sendFigureprintInfo();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -225,7 +236,7 @@ public class FileSystemStore {
     /**
      * 把config信息发给集群管理子系统
      */
-    private void sendConfigInfo(){
+    private static void sendConfigInfo(){
         MessageProtocol mes=new MessageProtocol();
         mes.messageType= MessageType.SEND_CONFIG;
         mes.senderType = SenderType.STORE;
@@ -241,7 +252,7 @@ public class FileSystemStore {
     /**
      * 给冗余验证服务器返回指纹信息列表
      */
-    private void sendFingerprintListToRedundancy(ArrayList<String> info){
+    private static void sendFingerprintListToRedundancy(ArrayList<String> info){
         MessageProtocol mes=new MessageProtocol();
         mes.messageType=MessageType.SEND_FINGERPRINT_LIST;
         mes.senderType = SenderType.STORE;
@@ -257,7 +268,7 @@ public class FileSystemStore {
     /**
      * 把指纹信息发给集群管理子系统
      */
-    private void sendFigureprintInfo(){
+    private static void sendFigureprintInfo(){
         String filePath= systemConfig.FingerprintStorePath;//指纹信息的保存路径
         String fileName=  systemConfig.FingerprintName;
         FileInputStream fin = null;
@@ -350,25 +361,25 @@ public class FileSystemStore {
         }
         LogRecord.RunningInfoLogger.info("load RedundancyFileStoreInfo successful. total= "+redundancyFileStoreInfos.size());
 
-        // 与集群管理服务器建立连接
-        try {
-            socket = new Socket(systemConfig.ClusterServerIp, systemConfig.ClusterServerPort);
-            // 与集群管理服务器建立连接之后，开启线程监听集群管理服务器发来的消息
-            SocketAction socketAction = new SocketAction(socket);
-            Thread thread = new Thread(socketAction);
-            thread.start();
-            // 把config和指纹信息发过去
-            sendConfigInfo();
-            // 把指纹信息发送过去
-            sendFigureprintInfo();
-
-            KeepAliveWatchRedundancy k1 = new KeepAliveWatchRedundancy();
-            Thread t1 = new Thread(k1);
-            t1.start();
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            LogRecord.RunningErrorLogger.error(e.toString());
-        }
+        // 如果该服务器需要去冗，则与集群管理服务器建立连接
+//        if(Config.getConfig().elements().nextElement().ServerRedundancy.Switch) {
+            try {
+                socket = new Socket(systemConfig.ClusterServerIp, systemConfig.ClusterServerPort);
+                // 与集群管理服务器建立连接之后，开启线程监听集群管理服务器发来的消息
+                socketAction = new SocketAction(socket);
+                Thread thread = new Thread(socketAction);
+                thread.start();
+                // 把config和指纹信息发过去
+                sendConfigInfo();
+                // 把指纹信息发送过去
+                sendFigureprintInfo();
+                KeepAliveWatchRedundancy k1 = new KeepAliveWatchRedundancy();
+                Thread t1 = new Thread(k1);
+                t1.start();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                LogRecord.RunningErrorLogger.error(e.toString());
+            }
     }
 
     public FileSystemStore() {

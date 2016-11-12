@@ -90,9 +90,9 @@ public class Test2 {
 		new FileSystemStore();
 		Test2 test2 = new Test2();
 		System.out.println("");
-		test2.getAllFingerprintInfoTest();
-		test2.getAllRedundancyFileStoreInfoTest();
-//		test2.configTest();
+//		test2.getAllFingerprintInfoTest();
+//		test2.getAllRedundancyFileStoreInfoTest();
+		test2.configTest();
 	}
 
 }

@@ -167,5 +167,25 @@ public enum MessageType implements Serializable {
      * 存储服务器 ——> 客户端
      * <p>返回某个存储目录是否需要扩容的结论</p>
      */
-    REPLY_IF_DIRECTORY_NEED_EXPAND
+    REPLY_IF_DIRECTORY_NEED_EXPAND,
+    /**
+     * 客户端 ——> 冗余验证服务器
+     * <p>给某个存储目录结点扩容</p>
+     */
+    GET_EXPAND_DIRECTORY,
+    /**
+     * 冗余验证服务器 ——> 客户端
+     * <p>返回给某个存储目录结点扩容的结果</p>
+     */
+    REPLY_GET_EXPAND_DIRECTORY,
+    /**
+     * 冗余验证服务器 ——> 存储服务器
+     * <p>获取某个存储目录的扩容文件存储信息</p>
+     */
+    GET_EXPAND_FILE_STORE_INFO,
+    /**
+     * 存储服务器 ——> 冗余验证服务器
+     * <p>返回某个存储目录的扩容文件存储信息</p>
+     */
+    REPLY_GET_EXPAND_FILE_STORE_INFO,
 }

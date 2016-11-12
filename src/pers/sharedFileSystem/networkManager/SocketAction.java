@@ -11,6 +11,7 @@ import pers.sharedFileSystem.convenientUtil.ServerStateUtil;
 import pers.sharedFileSystem.entity.SenderType;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
+import pers.sharedFileSystem.systemFileManager.MessageCodeHandler;
 
 /**
  * 监控某个连接（客户端或者存储服务器）发来的消息
@@ -30,9 +31,9 @@ public class SocketAction implements Runnable {
 	 */
 	private long lastReceiveTime;
 	/**
-	 *  接收延迟时间间隔
+	 *  接收延迟时间间隔(毫秒)
 	 */
-	private long receiveTimeDelay = 5000;
+	private long receiveTimeDelay = 30000;
 	/**
 	 * 查找冗余文件消息的线程
 	 */
@@ -43,6 +44,12 @@ public class SocketAction implements Runnable {
 		lastReceiveTime = System.currentTimeMillis();
 	}
 
+	/**
+	 * 重置上次接受时间
+	 */
+	public void refreshLastReceiveTime(){
+		lastReceiveTime = System.currentTimeMillis();
+	}
 	/**
 	 * 处理查找文件元数据消息
 	 * @param mes
@@ -75,10 +82,14 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMes=new MessageProtocol();
 		RedundancyFileStoreInfo redundancyFileStoreInfo=(RedundancyFileStoreInfo)mes.content;
 		boolean re=FileSystemStore.addRedundancyFileStoreInfo(redundancyFileStoreInfo);
-		if(re)
-			reMes.messageCode=4000;
-		else
-			reMes.messageCode=4003;
+		if(re) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_ADD_REDUNDANCY_INFO, save file reference successful.");
+		}
+		else {
+			reMes.messageCode = 4003;
+			LogRecord.FileHandleErrorLogger.error("send REPLY_ADD_REDUNDANCY_INFO, "+MessageCodeHandler.getMessageInfo(4003, ""));
+		}
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_ADD_REDUNDANCY_INFO;
 		return reMes;
@@ -91,10 +102,14 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMes=new MessageProtocol();
 		RedundancyFileStoreInfo redundancyFileStoreInfo=(RedundancyFileStoreInfo)mes.content;
 		boolean re=FileSystemStore.deleteRedundancyFileStoreInfo(redundancyFileStoreInfo);
-		if(re)
-			reMes.messageCode=4000;
-		else
-			reMes.messageCode=4007;
+		if(re) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_DELETE_REDUNDANCY_INFO, delete file reference successful.");
+		}
+		else {
+			reMes.messageCode = 4007;
+			LogRecord.FileHandleErrorLogger.error("send REPLY_DELETE_REDUNDANCY_INFO, "+MessageCodeHandler.getMessageInfo(4007,""));
+		}
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_DELETE_REDUNDANCY_INFO;
 		return reMes;
@@ -108,10 +123,14 @@ public class SocketAction implements Runnable {
 		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
 		//boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
 		boolean re=FileSystemStore.addFingerprintInfo(fingerprintInfo);
-		if(re)
-			reMes.messageCode=4000;
-		else
-			reMes.messageCode=4004;
+		if(re) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_ADD_FINGERPRINTINFO, save metadata successful.");
+		}
+		else {
+			reMes.messageCode = 4004;
+			LogRecord.FileHandleErrorLogger.error("send REPLY_ADD_FINGERPRINTINFO, "+MessageCodeHandler.getMessageInfo(4004,""));
+		}
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_ADD_FINGERPRINTINFO;
 		return reMes;
@@ -125,10 +144,14 @@ public class SocketAction implements Runnable {
 		FingerprintInfo fingerprintInfo=(FingerprintInfo)mes.content;
 		//boolean re=FingerprintAdapter.saveFingerprint(fingerprintInfo);
 		boolean re=FileSystemStore.deleteFingerprintInfo(fingerprintInfo);
-		if(re)
-			reMes.messageCode=4000;
-		else
-			reMes.messageCode=4009;
+		if(re) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_DELETE_FINGERPRINTINFO, delete metadata successful.");
+		}
+		else {
+			reMes.messageCode = 4009;
+			LogRecord.FileHandleErrorLogger.error("send REPLY_DELETE_FINGERPRINTINFO,"+MessageCodeHandler.getMessageInfo(4009, ""));
+		}
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_DELETE_FINGERPRINTINFO;
 		return reMes;
@@ -143,10 +166,14 @@ public class SocketAction implements Runnable {
 //		FileReferenceInfo referenceInfo=new FileReferenceInfo();
 //		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
 		boolean re=FileSystemStore.addFileReferenceInfo(fingerprintInfo);
-		if(re)
-			reMes.messageCode=4000;
-		else
-			reMes.messageCode=4005;
+		if(re) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_ADD_FREQUENCY, add frequence successful.");
+		}
+		else {
+			reMes.messageCode = 4005;
+			LogRecord.FileHandleErrorLogger.error("send REPLY_ADD_FREQUENCY, "+MessageCodeHandler.getMessageInfo(4005, ""));
+		}
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_ADD_FREQUENCY;
 		return reMes;
@@ -161,10 +188,14 @@ public class SocketAction implements Runnable {
 //		FileReferenceInfo referenceInfo=new FileReferenceInfo();
 //		referenceInfo.Path=fingerprintInfo.getFilePath()+fingerprintInfo.getFileName();
 		boolean re=FileSystemStore.deleteFileReferenceInfo(fingerprintInfo);
-		if(re)
-			reMes.messageCode=4000;
-		else
-			reMes.messageCode=4008;
+		if(re) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_DELETE_FREQUENCY, delete frequence successful");
+		}
+		else {
+			reMes.messageCode = 4008;
+			LogRecord.FileHandleErrorLogger.error("send REPLY_DELETE_FREQUENCY, "+MessageCodeHandler.getMessageInfo(4008,""));
+		}
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_DELETE_FREQUENCY;
 		return reMes;
@@ -177,10 +208,14 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMes=new MessageProtocol();
 		String essentialStorePath=(String)mes.content;
 		ArrayList<FingerprintInfo> re=FileSystemStore.getRedundancyFileInfoByEssentialStorePath(essentialStorePath);
-		if(re!=null&&re.size()>0)
-			reMes.messageCode=4000;
-		else
-			reMes.messageCode=4006;
+		if(re!=null&&re.size()>0) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_GET_REDUNDANCY_INFO, get redundance successful");
+		}
+		else {
+			reMes.messageCode = 4006;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_GET_REDUNDANCY_INFO,"+MessageCodeHandler.getMessageInfo(4006,""));
+		}
 		reMes.content=re;
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_GET_REDUNDANCY_INFO;
@@ -194,6 +229,7 @@ public class SocketAction implements Runnable {
 		MessageProtocol reMes=new MessageProtocol();
 		ArrayList<FingerprintInfo> fingerprintInfos=(ArrayList<FingerprintInfo>)mes.content;
 		ArrayList<FingerprintInfo> re=FileSystemStore.validateFileNames(fingerprintInfos);
+		LogRecord.FileHandleInfoLogger.info("send REPLY_VALIDATE_FILENAMES, validate file names");
 		reMes.messageCode=4000;
 		reMes.content=re;
 		reMes.senderType=SenderType.STORE;
@@ -207,10 +243,8 @@ public class SocketAction implements Runnable {
 	private MessageProtocol doGetServerStateAction(MessageProtocol mes){
 		MessageProtocol reMes=new MessageProtocol();
 		ServerStateUtil serverStateUtil=new ServerStateUtil();
-		ServerState serverState = new ServerState();
-		serverState.MemoryState = serverStateUtil.getMemoryState();
-		serverState.DiskState = serverStateUtil.getDiskState();
-		serverState.CpuState = serverStateUtil.getCpuState();
+		ServerState serverState = serverStateUtil.getServerState();
+		LogRecord.FileHandleInfoLogger.info("send REPLY_GET_SERVER_STATE to "+socket.getInetAddress().toString()+":"+socket.getPort());
 		reMes.messageCode=4000;
 		reMes.content=serverState;
 		reMes.senderType=SenderType.STORE;
@@ -228,10 +262,13 @@ public class SocketAction implements Runnable {
 		reMes.content=0; // 不需要扩容
 		if(sysConfig.ExpandCriticalValue * 100 <= diskState){
 			reMes.content=1; // 需要扩容
+			LogRecord.FileHandleInfoLogger.info("send REPLY_IF_DIRECTORY_NEED_EXPAND, disks are full");
+		}else{
+			LogRecord.FileHandleInfoLogger.info("send REPLY_IF_DIRECTORY_NEED_EXPAND, disks are idle");
 		}
 		reMes.messageCode=4000;
 		reMes.senderType=SenderType.STORE;
-		reMes.messageType=MessageType.REPLY_GET_SERVER_STATE;
+		reMes.messageType=MessageType.REPLY_IF_DIRECTORY_NEED_EXPAND;
 		return reMes;
 	}
 	/**
@@ -273,9 +310,9 @@ public class SocketAction implements Runnable {
 			}
 			case KEEP_ALIVE:{
 				if(mes.senderType == SenderType.CLIENT)
-					LogRecord.RunningInfoLogger.info("client handshake "+socket.getInetAddress().toString());
+					LogRecord.RunningInfoLogger.info("client handshake "+socket.getInetAddress().toString()+":"+socket.getPort());
 				else if(mes.senderType == SenderType.STORE)
-					LogRecord.RunningInfoLogger.info("store handshake "+socket.getInetAddress().toString());
+					LogRecord.RunningInfoLogger.info("store handshake "+socket.getInetAddress().toString()+":"+socket.getPort());
 				return null;
 			}
 			case GET_SERVER_STATE:{
@@ -420,6 +457,7 @@ public class SocketAction implements Runnable {
 		while (run) {
 			// 超过接收延迟时间（毫秒）之后，终止此客户端的连接
 			if (System.currentTimeMillis() - lastReceiveTime > receiveTimeDelay) {
+				LogRecord.RunningErrorLogger.error("shut down connect because of timeout "+(System.currentTimeMillis() - lastReceiveTime));
 				overThis();
 			} else {
 				try {

@@ -8,8 +8,8 @@ import java.util.ArrayList;
  */
 public class ExpandFileStoreInfo implements Serializable{
     /**
-     * 被扩容的结点编号相对路径
-     * 根据directoryNodeId找到它的全部扩容结点的编号
+     * 被扩容的结点编号
+     * 可以根据directoryNodeId找到它的全部扩容结点的编号
      * directoryNodeId ——> expandNodeList
      */
     public String directoryNodeId;

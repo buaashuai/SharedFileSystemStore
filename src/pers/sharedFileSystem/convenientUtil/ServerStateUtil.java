@@ -6,6 +6,7 @@ import org.hyperic.sigar.cmd.Shell;
 import org.hyperic.sigar.cmd.SigarCommandBase;
 import org.hyperic.sigar.shell.ShellCommandExecException;
 import org.hyperic.sigar.shell.ShellCommandUsageException;
+import pers.sharedFileSystem.communicationObject.ServerState;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -24,9 +25,11 @@ public class ServerStateUtil extends SigarCommandBase {
      */
     public double getMemoryState(){
         OperatingSystemMXBean osmb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
-        double totalMem= osmb.getTotalPhysicalMemorySize() / 1024 / 1024;
-        double freeMem=osmb.getFreePhysicalMemorySize() / 1024 / 1024;
+        double totalMem= osmb.getTotalPhysicalMemorySize() / 1024 / 1024 / 1024;
+        double freeMem=osmb.getFreePhysicalMemorySize() / 1024 / 1024 / 1024;
         double memPercentage= 100*(totalMem- freeMem)/totalMem;
+        System.out.println("总内存："+totalMem+"GB");
+        System.out.println("空闲内存："+freeMem+"GB");
         return  memPercentage;
     }
 
@@ -42,6 +45,9 @@ public class ServerStateUtil extends SigarCommandBase {
             freeDisk+=file.getFreeSpace()/1024/1024/1024;
         }
         diskPercentage=100*(totalDisk- freeDisk)/totalDisk;
+        System.out.println("总磁盘空间："+totalDisk+"GB");
+        System.out.println("空闲磁盘空间："+freeDisk+"GB");
+        System.out.println("磁盘占用率："+diskPercentage+"%");
         return  diskPercentage;
     }
 
@@ -80,6 +86,35 @@ public class ServerStateUtil extends SigarCommandBase {
         return cpu*100;
     }
 
+    /**
+     * 获取服务器运行状态参数
+     * @return
+     */
+    public ServerState getServerState(){
+        ServerState serverState = new ServerState();
+        OperatingSystemMXBean osmb = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        double totalMem= osmb.getTotalPhysicalMemorySize() / 1024 / 1024 / 1024;
+        double freeMem=osmb.getFreePhysicalMemorySize() / 1024 / 1024 / 1024;
+        double memPercentage= 100*(totalMem- freeMem)/totalMem;
+        serverState.TotalMemory = totalMem;
+        serverState.FreeMemory =freeMem;
+        serverState.MemoryState = memPercentage;
+
+        File[] roots = File.listRoots();//获取磁盘分区列表
+        double totalDisk=0,freeDisk=0,diskPercentage;
+        for (File file : roots) {
+            totalDisk+= file.getTotalSpace()/1024/1024/1024;
+            freeDisk+=file.getFreeSpace()/1024/1024/1024;
+        }
+        diskPercentage=100*(totalDisk- freeDisk)/totalDisk;
+        serverState.TotalDisk = totalDisk;
+        serverState.FreeDisk = freeDisk;
+        serverState.DiskState = diskPercentage;
+
+        serverState.CpuState = getCpuState();
+        return serverState;
+    }
+
     public void output(String[] args) throws SigarException {
         org.hyperic.sigar.CpuInfo[] infos =
                 this.sigar.getCpuInfoList();
@@ -95,8 +130,8 @@ public class ServerStateUtil extends SigarCommandBase {
 
     public static void main(String[] args) {
         ServerStateUtil serverState=new ServerStateUtil();
-        System.out.println("内存占用率：" +serverState.getMemoryState()+ "%");
-        System.out.println("磁盘占用率：" +serverState.getDiskState()+ "%");
+        System.out.println("内存占用率：" +serverState.getMemoryState()+ "%\n");
+        System.out.println("磁盘占用率：" +serverState.getDiskState()+ "%\n");
         System.out.println("CPU占用率：" +serverState.getCpuState()+ "%");
     }
 }

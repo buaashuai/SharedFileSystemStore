@@ -198,4 +198,14 @@ public enum MessageType implements Serializable {
      * <p>返回空闲的存储服务器的运行状态</p>
      */
     REPLY_FREE_GET_SERVER_STATE,
+    /**
+     * 客户端 ——> 存储服务器
+     * <p>添加扩容信息</p>
+     */
+    ADD_EXPAND_INFO,
+    /**
+     * 存储服务器 ——> 客户端
+     * <p>添加扩容信息结果</p>
+     */
+    REPLY_ADD_EXPAND_INFO,
 }

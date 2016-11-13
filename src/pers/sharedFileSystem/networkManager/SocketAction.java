@@ -136,6 +136,26 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
+	 * 处理添加扩容信息消息
+	 * @return
+	 */
+	private MessageProtocol doAddExpandAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		ExpandFileStoreInfo expandFileStoreInfo=(ExpandFileStoreInfo)mes.content;
+		boolean re=FileSystemStore.addExpandFileStoreInfo(expandFileStoreInfo);
+		if(re) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_ADD_EXPAND_INFO, save expand info successful.");
+		}
+		else {
+			reMes.messageCode = 4012;
+			LogRecord.FileHandleErrorLogger.error("send REPLY_ADD_EXPAND_INFO, "+MessageCodeHandler.getMessageInfo(4012,""));
+		}
+		reMes.senderType=SenderType.STORE;
+		reMes.messageType=MessageType.REPLY_ADD_EXPAND_INFO;
+		return reMes;
+	}
+	/**
 	 * 处理删除元数据消息
 	 * @return
 	 */
@@ -372,6 +392,9 @@ public class SocketAction implements Runnable {
 			}
 			case SOCKET_MONITOR:{
 				return null;
+			}
+			case ADD_EXPAND_INFO:{
+				return doAddExpandAction(mes);
 			}
 			default:{
 				return null;

@@ -194,7 +194,12 @@ public class FileSystemStore {
      * @param expandFileStoreInfo 被添加的扩容文件存储信息
      */
     public static boolean addExpandFileStoreInfo(ExpandFileStoreInfo expandFileStoreInfo){
-        expandInfoMap.put(expandFileStoreInfo.directoryNodeId,expandFileStoreInfo.expandNodeList);
+        ArrayList<String>expandNodeList=expandInfoMap.get(expandFileStoreInfo.directoryNodeId);
+        if(expandNodeList==null){
+            expandNodeList=new ArrayList<>();
+        }
+        expandNodeList.addAll(expandFileStoreInfo.expandNodeList);
+        expandInfoMap.put(expandFileStoreInfo.directoryNodeId, expandNodeList);
         boolean re=ExpandFileAdapter.saveAllExpandInfo(expandInfoMap);
         return  re;
     }

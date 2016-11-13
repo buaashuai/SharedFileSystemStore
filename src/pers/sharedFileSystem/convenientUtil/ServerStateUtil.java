@@ -110,7 +110,7 @@ public class ServerStateUtil extends SigarCommandBase {
         serverState.FreeDisk = freeDisk;
         serverState.DiskState = diskPercentage;
 
-        serverState.CpuState = getCpuState();
+//        serverState.CpuState = getCpuState();
         return serverState;
     }
 

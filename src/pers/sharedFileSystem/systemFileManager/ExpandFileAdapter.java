@@ -1,6 +1,6 @@
 package pers.sharedFileSystem.systemFileManager;
 
-import pers.sharedFileSystem.entity.ExpandFileStoreInfo;
+import pers.sharedFileSystem.communicationObject.ExpandFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.configManager.Constant;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;

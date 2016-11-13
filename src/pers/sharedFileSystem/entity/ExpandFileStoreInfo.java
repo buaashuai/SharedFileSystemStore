@@ -1,4 +1,4 @@
-package pers.sharedFileSystem.communicationObject;
+package pers.sharedFileSystem.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

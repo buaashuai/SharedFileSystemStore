@@ -1,12 +1,9 @@
 package pers.sharedFileSystem.systemFileManager;
 
-import pers.sharedFileSystem.communicationObject.ExpandFileStoreInfo;
-import pers.sharedFileSystem.communicationObject.FingerprintInfo;
-import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
+import pers.sharedFileSystem.entity.ExpandFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.configManager.Constant;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
-import pers.sharedFileSystem.entity.DirectoryNode;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.logManager.LogRecord;
 

@@ -222,6 +222,27 @@ public class SocketAction implements Runnable {
 		return reMes;
 	}
 	/**
+	 * 获取某个存储目录结点的扩容文件存储信息
+	 * @return
+	 */
+	private MessageProtocol doGetExpandFileStoreInfo(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		String directoryNodeId=(String)mes.content;
+		ArrayList<String> re=FileSystemStore.getExpandNodeListByNodeId(directoryNodeId);
+		if(re!=null&&re.size()>0) {
+			reMes.messageCode = 4000;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_GET_EXPAND_FILE_STORE_INFO, get ExpandFileStoreInfo successful");
+		}
+		else {
+			reMes.messageCode = 4011;
+			LogRecord.FileHandleInfoLogger.info("send REPLY_GET_EXPAND_FILE_STORE_INFO,"+MessageCodeHandler.getMessageInfo(4011,""));
+		}
+		reMes.content=re;
+		reMes.senderType=SenderType.STORE;
+		reMes.messageType=MessageType.REPLY_GET_EXPAND_FILE_STORE_INFO;
+		return reMes;
+	}
+	/**
 	 * 根据“相对路径”和文件名验证文件有效性
 	 * @return
 	 */
@@ -249,6 +270,28 @@ public class SocketAction implements Runnable {
 		reMes.content=serverState;
 		reMes.senderType=SenderType.STORE;
 		reMes.messageType=MessageType.REPLY_GET_SERVER_STATE;
+		return reMes;
+	}
+	/**
+	 * 获取空闲的存储服务器的运行状态
+	 * @return
+	 */
+	private MessageProtocol doGetFreeServerStateAction(MessageProtocol mes){
+		MessageProtocol reMes=new MessageProtocol();
+		ServerStateUtil serverStateUtil=new ServerStateUtil();
+		ServerState serverState = serverStateUtil.getServerState();
+		double diskState = serverStateUtil.getDiskState();
+
+		if(sysConfig.ExpandCriticalValue * 100 <= diskState){//需要扩容
+			reMes.messageCode=4010;
+			reMes.content="";
+		}else{
+			reMes.messageCode=4000;
+			reMes.content=serverState;
+		}
+		LogRecord.FileHandleInfoLogger.info("send REPLY_FREE_GET_SERVER_STATE to "+socket.getInetAddress().toString()+":"+socket.getPort());
+		reMes.senderType=SenderType.STORE;
+		reMes.messageType=MessageType.REPLY_FREE_GET_SERVER_STATE;
 		return reMes;
 	}
 	/**
@@ -318,8 +361,14 @@ public class SocketAction implements Runnable {
 			case GET_SERVER_STATE:{
 				return doGetServerStateAction(mes);
 			}
+			case GET_FREE_SERVER_STATE:{
+				return doGetFreeServerStateAction(mes);
+			}
 			case IF_DIRECTORY_NEED_EXPAND:{
 				return doIfDirectoryNeedExpandAction(mes);
+			}
+			case GET_EXPAND_FILE_STORE_INFO:{
+				return doGetExpandFileStoreInfo(mes);
 			}
 			case SOCKET_MONITOR:{
 				return null;

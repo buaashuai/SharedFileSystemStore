@@ -1,14 +1,12 @@
 package pers.sharedFileSystem.networkManager;
 
 
-import pers.sharedFileSystem.communicationObject.FingerprintInfo;
-import pers.sharedFileSystem.communicationObject.MessageProtocol;
-import pers.sharedFileSystem.communicationObject.MessageType;
-import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
+import pers.sharedFileSystem.communicationObject.*;
 import pers.sharedFileSystem.configManager.Config;
 import pers.sharedFileSystem.convenientUtil.CommonUtil;
 import pers.sharedFileSystem.entity.*;
 import pers.sharedFileSystem.logManager.LogRecord;
+import pers.sharedFileSystem.systemFileManager.ExpandFileAdapter;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 import pers.sharedFileSystem.systemFileManager.RedundantFileAdapter;
 
@@ -46,6 +44,10 @@ public class FileSystemStore {
      * 文件MD5到文件指纹信息的映射
      */
     private static ConcurrentHashMap<String,FingerprintInfo> fingerprintInfoMap;
+    /**
+     * 存储目录编号到扩容结点编号集合的映射
+     */
+    private static ConcurrentHashMap<String,ArrayList<String>> expandInfoMap;
 
     /**
      * 根据文件指纹查找对应的文件指纹信息
@@ -74,6 +76,9 @@ public class FileSystemStore {
         try {
             LogRecord.RunningErrorLogger.error("attempt to reconnect to redundancy server.");
             socket = new Socket(systemConfig.ClusterServerIp, systemConfig.ClusterServerPort);
+            socketAction = new SocketAction(socket);
+            Thread thread = new Thread(socketAction);
+            thread.start();
             // 把config和指纹信息发过去
             sendConfigInfo();
             // 把指纹信息发送过去
@@ -183,6 +188,21 @@ public class FileSystemStore {
 
         boolean re=FingerprintAdapter.saveAllFingerprint(fingerprintInfoMap);
         return  re;
+    }
+    /**
+     * 添加扩容文件存储信息
+     * @param expandFileStoreInfo 被添加的扩容文件存储信息
+     */
+    public static boolean addExpandFileStoreInfo(ExpandFileStoreInfo expandFileStoreInfo){
+        expandInfoMap.put(expandFileStoreInfo.directoryNodeId,expandFileStoreInfo.expandNodeList);
+        boolean re=ExpandFileAdapter.saveAllExpandInfo(expandInfoMap);
+        return  re;
+    }
+    /**
+     * 根据存储目录结点编号获取扩容结点的编号集合
+     */
+    public static  ArrayList<String> getExpandNodeListByNodeId(String directoryNodeId){
+        return expandInfoMap.get(directoryNodeId);
     }
     /**
      * 添加文件元数据
@@ -360,6 +380,14 @@ public class FileSystemStore {
             redundancyFileMap.put(r.essentialStorePath,r.otherFileInfo);
         }
         LogRecord.RunningInfoLogger.info("load RedundancyFileStoreInfo successful. total= "+redundancyFileStoreInfos.size());
+
+        LogRecord.RunningInfoLogger.info("start load ExpandFileStoreInfo.");
+        expandInfoMap=new ConcurrentHashMap<>();
+        List<ExpandFileStoreInfo>expandFileStoreInfos= ExpandFileAdapter.getAllRedundancyFileStoreInfo();
+        for(ExpandFileStoreInfo info:expandFileStoreInfos){
+            expandInfoMap.put(info.directoryNodeId, info.expandNodeList);
+        }
+        LogRecord.RunningInfoLogger.info("load ExpandFileStoreInfo successful. total= "+expandFileStoreInfos.size());
 
         // 如果该服务器需要去冗，则与集群管理服务器建立连接
 //        if(Config.getConfig().elements().nextElement().ServerRedundancy.Switch) {

@@ -7,6 +7,7 @@ import org.hyperic.sigar.cmd.SigarCommandBase;
 import org.hyperic.sigar.shell.ShellCommandExecException;
 import org.hyperic.sigar.shell.ShellCommandUsageException;
 import pers.sharedFileSystem.communicationObject.ServerState;
+import pers.sharedFileSystem.logManager.LogRecord;
 
 import java.io.File;
 import java.lang.management.ManagementFactory;
@@ -45,9 +46,7 @@ public class ServerStateUtil extends SigarCommandBase {
             freeDisk+=file.getFreeSpace()/1024/1024/1024;
         }
         diskPercentage=100*(totalDisk- freeDisk)/totalDisk;
-        System.out.println("总磁盘空间："+totalDisk+"GB");
-        System.out.println("空闲磁盘空间："+freeDisk+"GB");
-        System.out.println("磁盘占用率："+diskPercentage+"%");
+        LogRecord.RunningInfoLogger.info("总磁盘空间："+totalDisk+"GB\t"+"空闲磁盘空间："+freeDisk+"GB\t"+"磁盘占用率："+diskPercentage+"%");
         return  diskPercentage;
     }
 

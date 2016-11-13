@@ -3,6 +3,7 @@ package pers.sharedFileSystem.test;
 import java.util.Hashtable;
 import java.util.List;
 
+import pers.sharedFileSystem.communicationObject.ExpandFileStoreInfo;
 import pers.sharedFileSystem.communicationObject.FingerprintInfo;
 import pers.sharedFileSystem.communicationObject.RedundancyFileStoreInfo;
 import pers.sharedFileSystem.configManager.Config;
@@ -10,6 +11,7 @@ import pers.sharedFileSystem.entity.FileType;
 import pers.sharedFileSystem.entity.ServerNode;
 import pers.sharedFileSystem.entity.SystemConfig;
 import pers.sharedFileSystem.networkManager.FileSystemStore;
+import pers.sharedFileSystem.systemFileManager.ExpandFileAdapter;
 import pers.sharedFileSystem.systemFileManager.FingerprintAdapter;
 import pers.sharedFileSystem.systemFileManager.RedundantFileAdapter;
 
@@ -85,14 +87,34 @@ public class Test2 {
 						+ infos.size() + "\n");
 	}
 
+	/**
+	 * 获取全部扩容信息测试
+	 */
+	private void getAllExpandFileStoreInfoTest() {
+		List<ExpandFileStoreInfo> infos = ExpandFileAdapter
+				.getAllRedundancyFileStoreInfo();
+		for (ExpandFileStoreInfo in : infos) {
+			System.out.println("directoryNodeId:" + in.directoryNodeId);
+			System.out.println("expandNodeList:");
+			for (String fi : in.expandNodeList) {
+				System.out.println("\t" + fi);
+			}
+			System.out.println("");
+		}
+		System.out
+				.println("getAllExpandFileStoreInfoTest: ********************* num= "
+						+ infos.size() + "\n");
+	}
+
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		new FileSystemStore();
 		Test2 test2 = new Test2();
 		System.out.println("");
-//		test2.getAllFingerprintInfoTest();
-//		test2.getAllRedundancyFileStoreInfoTest();
-		test2.configTest();
+		test2.getAllFingerprintInfoTest();
+		test2.getAllRedundancyFileStoreInfoTest();
+//		test2.configTest();
+		test2.getAllExpandFileStoreInfoTest();
 	}
 
 }

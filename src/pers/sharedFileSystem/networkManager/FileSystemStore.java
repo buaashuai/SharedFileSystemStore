@@ -198,7 +198,11 @@ public class FileSystemStore {
         if(expandNodeList==null){
             expandNodeList=new ArrayList<>();
         }
-        expandNodeList.addAll(expandFileStoreInfo.expandNodeList);
+        for(String info:expandFileStoreInfo.expandNodeList){
+            if(!expandNodeList.contains(info)){
+                expandNodeList.add(info);
+            }
+        }
         expandInfoMap.put(expandFileStoreInfo.directoryNodeId, expandNodeList);
         boolean re=ExpandFileAdapter.saveAllExpandInfo(expandInfoMap);
         return  re;

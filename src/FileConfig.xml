@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <FileConfig>
-	<serverNode id="tempNode"><!-- 缓存服务器节点 -->
+	<serverNode id="tempNode127"><!-- 缓存服务器节点 -->
 		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
 		<port>21</port><!--ftp端口-->
 		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->

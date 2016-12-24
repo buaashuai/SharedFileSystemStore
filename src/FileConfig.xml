@@ -6,9 +6,9 @@
 		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->
 		<userName>WangShuai</userName><!-- 该服务器的登录用户名 Administrator-->
 		<password>0987654321</password><!-- 该服务器的登录密码 C:/Users/dell/Desktop/temp-->
-		<url>http://www.xxx.com</url><!--该服务器的http访问路径-->
-		<directoryNode id="tempStoreNode" storePath="E:/ftp"><!--该服务器的存储根路径 -->
-			<directoryNode id="temp" nameType="static" name="temp"><!--缓存文件夹 -->
+		<url>http://10.2.8.171:89</url><!--该服务器的http访问路径-->
+		<directoryNode id="tempNode127_a1" storePath="E:/phpWorkspace"><!--该服务器的存储根路径 -->
+			<directoryNode id="tempNode127_a1_d1" nameType="static" name="temp"><!--缓存文件夹 -->
 				<redundancy switch="on"><!--是否进行文件删冗 -->
 					<fingerGenType type="server"><!--指纹产生方式 -->
 						<property>fingerPrint</property><!--指纹映射属性名 -->
@@ -18,7 +18,7 @@
 					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT,JPG
 				</whiteList>
 			</directoryNode>
-			<directoryNode id="temp2" nameType="static" name="temp2"><!--缓存文件夹 -->
+			<directoryNode id="tempNode127_a1_d2" nameType="static" name="temp2"><!--缓存文件夹 -->
 				<redundancy switch="on"><!--是否进行文件删冗 -->
 					<fingerGenType type="server"><!--指纹产生方式 -->
 						<property>fingerPrint</property><!--指纹映射属性名 -->
@@ -29,9 +29,9 @@
 				</whiteList>
 			</directoryNode>
 		</directoryNode>
-		<directoryNode id="renderStoreNode2222222" storePath="D:/ftp23424"><!--该服务器的存储根路径 -->
-			<directoryNode id="renderConfig" nameType="static" name="RenderConfig"><!-- 官方场景配置文件 -->
-				<directoryNode id="hallType" nameType="dynamic" property="hallTypeId"></directoryNode><!--官方的场景对应的灵堂配置文件 -->
+		<directoryNode id="tempNode127_a2" storePath="E:/phpWorkspace"><!--该服务器的存储根路径 -->
+			<directoryNode id="tempNode127_a2_d1" nameType="static" name="RenderConfig"><!-- 官方场景配置文件 -->
+				<directoryNode id="tempNode127_a2_d2" nameType="dynamic" property="hallTypeId"></directoryNode><!--官方的场景对应的灵堂配置文件 -->
 			</directoryNode>
 		</directoryNode>
 	</serverNode>

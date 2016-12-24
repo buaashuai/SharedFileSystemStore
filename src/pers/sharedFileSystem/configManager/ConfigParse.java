@@ -169,9 +169,10 @@ public class ConfigParse {
         SAXBuilder builder = new SAXBuilder();
         String path = "", tpath = "", docPath = "";
         Document doc = null;
+        String fileName = "FileConfig"+Config.SERVER_IP+".xml";
         try {
             if (Config.runtimeType == RuntimeType.DEBUG) {
-                docPath = System.getProperty("user.dir") + "\\src\\FileConfig.xml";
+                docPath = System.getProperty("user.dir") + "\\src\\"+fileName;
                 doc = builder.build(docPath);
             } else if (Config.runtimeType == RuntimeType.CLIENT) {
                 path = this.getClass().getProtectionDomain().getCodeSource()
@@ -187,7 +188,7 @@ public class ConfigParse {
                 InputStream in = this
                         .getClass()
                         .getResourceAsStream(
-                                "/FileConfig.xml");
+                                "/"+fileName);
                 doc = builder.build(in);
             }
             // 单独放置在API系统里面是下面的代码，在文件系统中是上面的代码
@@ -239,15 +240,16 @@ public class ConfigParse {
         SAXBuilder builder = new SAXBuilder();
         String path = "", tpath = "", docPath = "";
         Document doc = null;
+        String fileName = "SystemConfig"+Config.SERVER_IP+".xml";
         try {
             if (Config.runtimeType == RuntimeType.DEBUG) {
-                docPath = System.getProperty("user.dir") + "\\src\\SystemConfig.xml";
+                docPath = System.getProperty("user.dir") + "\\src\\"+fileName;
                 doc = builder.build(docPath);
             } else if (Config.runtimeType == RuntimeType.CLIENT) {
                 path = this.getClass().getProtectionDomain().getCodeSource()
                         .getLocation().getPath();
                 tpath = path.substring(0, path.indexOf("lib"));
-                docPath = tpath + "classes/SystemConfig.xml";
+                docPath = tpath + "classes/"+fileName;
                 doc = builder.build(docPath);
                 // System.out.println(docPath);
                 LogRecord.RunningInfoLogger.info("SystemConfig=" + docPath);
@@ -264,7 +266,7 @@ public class ConfigParse {
                 InputStream in = this
                         .getClass()
                         .getResourceAsStream(
-                                "/SystemConfig.xml");
+                                "/"+fileName);
                 doc = builder.build(in);
             }
             // 单独放置在API系统里面是下面的代码，在文件系统中是上面的代码

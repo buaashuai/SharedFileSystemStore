@@ -27,7 +27,11 @@ public class Config {
 	 * false 表示部署阶段
 	 * </p>
 	 */
-	public static final RuntimeType runtimeType = RuntimeType.DEBUG;
+	public static final RuntimeType runtimeType = RuntimeType.DEBUG;// 打包的时候选择server，并且需要把sigar包手工复制到打包文件里面的org文件夹中
+	/**
+	 * 打包的时候，通过serverIP指定配置文件的名称，如serverIP=188，则采用FileConfig_188.xml和SystemConfig_188.xml
+	 */
+	public static final String SERVER_IP=runtimeType == RuntimeType.DEBUG ? "" : "_188";
 	/**
 	 * 资源目录名的前导符
 	 * <p>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<FileConfig>
+	<serverNode id="tempNode188"><!-- 缓存服务器节点 -->
+		<ip>10.2.8.188</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
+		<port>21</port><!--ftp端口-->
+		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->
+		<userName>1709</userName><!-- 该服务器的登录用户名 Administrator-->
+		<password>naruto</password><!-- 该服务器的登录密码 C:/Users/dell/Desktop/temp-->
+		<url>http://10.2.8.188</url><!--该服务器的http访问路径-->
+		<directoryNode id="tempNode188_a1" storePath="E:/wwwRoot"><!--该服务器的存储根路径 -->
+			<directoryNode id="tempNode188_a1_d1" nameType="static" name="temp"><!--缓存文件夹 -->
+				<redundancy switch="on"><!--是否进行文件删冗 -->
+					<fingerGenType type="server"><!--指纹产生方式 -->
+						<property>fingerPrint</property><!--指纹映射属性名 -->
+					</fingerGenType>
+				</redundancy>
+				<whiteList><!--该节点可以接收文件的白名单 -->
+					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT,JPG
+				</whiteList>
+			</directoryNode>
+		</directoryNode>
+		<directoryNode id="tempNode188_a2" storePath="D:/ftp23424"><!--该服务器的存储根路径 -->
+			<directoryNode id="tempNode188_a2_d1" nameType="static" name="RenderConfig"><!-- 官方场景配置文件 -->
+				<directoryNode id="tempNode188_a2_d2" nameType="dynamic" property="hallTypeId"></directoryNode><!--官方的场景对应的灵堂配置文件 -->
+			</directoryNode>
+		</directoryNode>
+	</serverNode>
+</FileConfig>

@@ -123,7 +123,7 @@ public class ServerStateUtil extends SigarCommandBase {
         if (!this.displayTimes) {
             return;
         }
-        cpu=this.sigar.getCpuPerc().getSys();
+//        cpu=this.sigar.getCpuPerc().getSys();
 //        output(this.sigar.getCpuPerc());
     }
 
@@ -131,6 +131,6 @@ public class ServerStateUtil extends SigarCommandBase {
         ServerStateUtil serverState=new ServerStateUtil();
         System.out.println("内存占用率：" +serverState.getMemoryState()+ "%\n");
         System.out.println("磁盘占用率：" +serverState.getDiskState()+ "%\n");
-        System.out.println("CPU占用率：" +serverState.getCpuState()+ "%");
+//        System.out.println("CPU占用率：" +serverState.getCpuState()+ "%");
     }
 }

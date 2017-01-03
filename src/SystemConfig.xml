@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <SystemConfig>
-		<fingerprintStorePath>E:/phpWorkspace</fingerprintStorePath><!--指纹信息文件保存路径 -->
+		<fingerprintStorePath>D:/EclipseProject/deploy/webapps/portal/static/FileBase</fingerprintStorePath><!--指纹信息文件保存路径 -->
 		<fingerprintName>Fingerprint_store.sys</fingerprintName><!--指纹信息文件名 -->
-		<redundancyFileStorePath>E:/phpWorkspace</redundancyFileStorePath><!--冗余信息文件保存路径 -->
+		<redundancyFileStorePath>D:/EclipseProject/deploy/webapps/portal/static/FileBase</redundancyFileStorePath><!--冗余信息文件保存路径 -->
 		<redundancyFileName>Redundancy_store.sys</redundancyFileName><!--冗余信息文件名 -->
         <port>9996</port><!-- 本地存储服务器的文件系统监听端口 -->
-        <expandFileStorePath>E:/phpWorkspace</expandFileStorePath><!--结点扩容信息文件保存路径 -->
+        <expandFileStorePath>D:/EclipseProject/deploy/webapps/portal/static/FileBase</expandFileStorePath><!--结点扩容信息文件保存路径 -->
         <expandFileName>Expand_store.sys</expandFileName><!--结点扩容信息文件名 -->
 		<clusterServerIp>127.0.0.1</clusterServerIp><!-- 集群管理系统的Ip地址-->
 		<clusterServerPort>9998</clusterServerPort><!-- 集群管理系统的监听端 口-->

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <SystemConfig>
-		<fingerprintStorePath>E:/wwwRoot</fingerprintStorePath><!--指纹信息文件保存路径 -->
+		<fingerprintStorePath>E:/wwwRoot/FileBase</fingerprintStorePath><!--指纹信息文件保存路径 -->
 		<fingerprintName>Fingerprint_store.sys</fingerprintName><!--指纹信息文件名 -->
-		<redundancyFileStorePath>E:/wwwRoot</redundancyFileStorePath><!--冗余信息文件保存路径 -->
+		<redundancyFileStorePath>E:/wwwRoot/FileBase</redundancyFileStorePath><!--冗余信息文件保存路径 -->
 		<redundancyFileName>Redundancy_store.sys</redundancyFileName><!--冗余信息文件名 -->
         <port>9996</port><!-- 本地存储服务器的文件系统监听端口 -->
-        <expandFileStorePath>E:/wwwRoot</expandFileStorePath><!--结点扩容信息文件保存路径 -->
+        <expandFileStorePath>E:/wwwRoot/FileBase</expandFileStorePath><!--结点扩容信息文件保存路径 -->
         <expandFileName>Expand_store.sys</expandFileName><!--结点扩容信息文件名 -->
 		<clusterServerIp>10.2.8.171</clusterServerIp><!-- 集群管理系统的Ip地址-->
 		<clusterServerPort>9998</clusterServerPort><!-- 集群管理系统的监听端 口-->

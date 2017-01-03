@@ -1,37 +1,22 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <FileConfig>
-	<serverNode id="tempNode127"><!-- 缓存服务器节点 -->
-		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 192.168.192.100-->
-		<port>21</port><!--ftp端口-->
-		<serverPort>9996</serverPort><!--该服务器上的文件系统端口-->
-		<userName>WangShuai</userName><!-- 该服务器的登录用户名 Administrator-->
-		<password>0987654321</password><!-- 该服务器的登录密码 C:/Users/dell/Desktop/temp-->
-		<url>http://10.2.8.171:89</url><!--该服务器的http访问路径-->
-		<directoryNode id="tempNode127_a1" storePath="E:/phpWorkspace"><!--该服务器的存储根路径 -->
-			<directoryNode id="tempNode127_a1_d1" nameType="static" name="temp"><!--缓存文件夹 -->
-				<redundancy switch="on"><!--是否进行文件删冗 -->
+	<serverNode id="TempStoreNode">
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 127.0.0.1 -->
+		<port>21</port><!--ftp端口 -->
+		<serverPort>9996</serverPort><!--该服务器上的文件系统端口 -->
+		<userName>1709</userName><!-- 该服务器的登录用户名 -->
+		<password>naruto</password><!-- 该服务器的登录密码 -->
+		<url>http://localhost:90/portal/static/FileBase</url><!--该服务器的http访问路径-->
+		<directoryNode id="TempFileStoreNode" storePath="D:/EclipseProject/deploy/webapps/portal/static/FileBase"><!--该服务器的存储根路径 -->
+			<directoryNode id="temp" nameType="static" name="temp"><!--缓存文件夹 -->
+				<redundancy switch="on"><!--是否进行文件删冗  on | off-->
 					<fingerGenType type="server"><!--指纹产生方式 -->
 						<property>fingerPrint</property><!--指纹映射属性名 -->
 					</fingerGenType>
 				</redundancy>
 				<whiteList><!--该节点可以接收文件的白名单 -->
-					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT,JPG
+					JPG,JPEG,GIF,PNG,FLV,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT,ZIP,RAR,XLS,XLSX
 				</whiteList>
-			</directoryNode>
-			<directoryNode id="tempNode127_a1_d2" nameType="static" name="temp2"><!--缓存文件夹 -->
-				<redundancy switch="on"><!--是否进行文件删冗 -->
-					<fingerGenType type="server"><!--指纹产生方式 -->
-						<property>fingerPrint</property><!--指纹映射属性名 -->
-					</fingerGenType>
-				</redundancy>
-				<whiteList><!--该节点可以接收文件的白名单 -->
-					JPEG,GIF,PNG,BMP16,BMP24,BMP256,FLV,ASF,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT
-				</whiteList>
-			</directoryNode>
-		</directoryNode>
-		<directoryNode id="tempNode127_a2" storePath="E:/phpWorkspace"><!--该服务器的存储根路径 -->
-			<directoryNode id="tempNode127_a2_d1" nameType="static" name="RenderConfig"><!-- 官方场景配置文件 -->
-				<directoryNode id="tempNode127_a2_d2" nameType="dynamic" property="hallTypeId"></directoryNode><!--官方的场景对应的灵堂配置文件 -->
 			</directoryNode>
 		</directoryNode>
 	</serverNode>

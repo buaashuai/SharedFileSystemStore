@@ -1,22 +1,56 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <FileConfig>
-	<serverNode id="TempStoreNode">
-		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) 127.0.0.1 -->
+	<serverNode id="OlineSacrificeStoreNode">
+		<ip>127.0.0.1</ip><!--节点存储位置(本地/远程服务器) -->
 		<port>21</port><!--ftp端口 -->
 		<serverPort>9996</serverPort><!--该服务器上的文件系统端口 -->
 		<userName>1709</userName><!-- 该服务器的登录用户名 -->
 		<password>naruto</password><!-- 该服务器的登录密码 -->
-		<url>http://localhost:90/portal/static/FileBase</url><!--该服务器的http访问路径-->
-		<directoryNode id="TempFileStoreNode" storePath="D:/EclipseProject/deploy/webapps/portal/static/FileBase"><!--该服务器的存储根路径 -->
-			<directoryNode id="temp" nameType="static" name="temp"><!--缓存文件夹 -->
+		<url>http://192.168.31.181:90/portal/static/FileBase</url><!--该服务器的http访问路径-->
+		<directoryNode id="OlineSacrificeFileStoreNode" storePath="D:/EclipseProject/deploy/webapps/portal/static/FileBase"><!--该服务器的存储根路径，必须与ftp的路径一致 -->
+			<directoryNode id="filePath" nameType="static" name="OlineSacrificeFiles"><!--网祭平台文件根目录 -->
 				<redundancy switch="on"><!--是否进行文件删冗  on | off-->
-					<fingerGenType type="server"><!--指纹产生方式 -->
+					<fingerGenType type="server"><!--指纹产生方式 server | client-->
 						<property>fingerPrint</property><!--指纹映射属性名 -->
 					</fingerGenType>
 				</redundancy>
 				<whiteList><!--该节点可以接收文件的白名单 -->
-					JPG,JPEG,GIF,PNG,FLV,AVI,MOV,MPG,MP4,WMV,DOC,DOCX,PDF,XML,TXT,ZIP,RAR,XLS,XLSX
+					ANY
 				</whiteList>
+				<directoryNode id="category" nameType="static" name="Category"><!--栏目事件文件夹 -->
+					<directoryNode id="categoryId" nameType="dynamic" property="categoryId"><!--某个栏目 -->
+						<directoryNode id="event" nameType="dynamic" property="eventId"><!--栏目包括的事件 -->
+							<directoryNode id="eventAlbum" nameType="static" name="EventAlbum"></directoryNode><!--事件相册 -->
+							<directoryNode id="eventActivity" nameType="dynamic" property="activityId"><!--事件活动 -->
+								<directoryNode id="eventActivityAlbum" nameType="static" name="ActivityAlbum"></directoryNode><!--活动相册 -->
+								<directoryNode id="eventActivityNews" nameType="static" name="ActivityAlbumNews"></directoryNode><!--活动新闻图片 -->
+							</directoryNode>
+						</directoryNode>
+					</directoryNode>
+				</directoryNode>
+				<directoryNode id="user" nameType="static" name="UserFile"><!--用户文件夹 -->
+					<directoryNode id="userId" nameType="dynamic" property="userId"><!--某个用户 -->
+						<directoryNode id="personalSubject" nameType="dynamic" property="personalSubjectId"><!--用户创建的个人缅怀专题 -->
+							<directoryNode id="userRenderFile" nameType="static" name="userRenderFile"><!--缅怀专题的渲染文件 -->
+								<directoryNode id="preFile" nameType="static" name="preFile"></directoryNode><!--每次重新渲染之前，把之前渲染好的照片保存到这里 -->
+							</directoryNode>
+							<directoryNode id="personalScene" nameType="static" name="personalScene"></directoryNode><!--灵堂场景配置文件 -->
+							<directoryNode id="personalAlbum" nameType="static" name="PersonalAlbum"></directoryNode><!--人物相册 -->
+							<directoryNode id="personalVideo" nameType="static" name="PersonalVideo"></directoryNode><!--人物视频 -->
+							<directoryNode id="personalActivity" nameType="dynamic" property="activityId"><!--个人缅怀专题的某个活动 -->
+								<directoryNode id="personalActivityAlbum" nameType="static" name="ActivityAlbum"></directoryNode><!--活动相册 -->
+								<directoryNode id="personalActivityVideo" nameType="static" name="ActivityVideo"></directoryNode><!--活动视频 -->
+							</directoryNode>
+						</directoryNode>
+						<directoryNode id="genealogyEvent" nameType="static" name="GenealogyEvent"></directoryNode><!--用户的家族事件头像 -->
+						<directoryNode id="familyCommunity" nameType="static" name="FamilyCommunity"><!--用户的家族社区 -->
+							<directoryNode id="familyCommunityId" nameType="dynamic" property="familyCommunityId">
+								<directoryNode id="genealogy" nameType="static" name="Genealogy"></directoryNode><!--家谱成员头像 -->
+								<directoryNode id="communityAlbum" nameType="static" name="communityAlbum"></directoryNode><!--家族社区相册 -->
+							</directoryNode>
+						</directoryNode>
+					</directoryNode>
+				</directoryNode>
 			</directoryNode>
 		</directoryNode>
 	</serverNode>

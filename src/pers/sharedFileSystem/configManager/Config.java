@@ -23,8 +23,9 @@ public class Config {
 	/**
 	 * 标记此文件系统是处于调试阶段还是部署阶段
 	 * <p>
-	 * true 表示调试阶段<br/>
-	 * false 表示部署阶段
+	 * DEBUG 表示调试阶段<br/>
+	 * SERVER 表示部署阶段<br/>
+	 * 需要把sigar包手工复制到打包文件里面的org文件夹中
 	 * </p>
 	 */
 	public static final RuntimeType runtimeType = RuntimeType.DEBUG;// 打包的时候选择server，并且需要把sigar包手工复制到打包文件里面的org文件夹中

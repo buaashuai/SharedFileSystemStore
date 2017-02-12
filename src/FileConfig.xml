@@ -6,8 +6,8 @@
 		<serverPort>9996</serverPort><!--该服务器上的文件系统端口 -->
 		<userName>1709</userName><!-- 该服务器的登录用户名 -->
 		<password>naruto</password><!-- 该服务器的登录密码 -->
-		<url>http://192.168.31.181:90/portal/static/FileBase</url><!--该服务器的http访问路径-->
-		<directoryNode id="OlineSacrificeFileStoreNode" storePath="D:/EclipseProject/deploy/webapps/portal/static/FileBase"><!--该服务器的存储根路径，必须与ftp的路径一致 -->
+		<url>http://127.0.0.1:90/FileBase</url><!--该服务器的http访问路径-->
+		<directoryNode id="OlineSacrificeFileStoreNode" storePath="E:/wwwRoot/FileBase"><!--该服务器的存储根路径，必须与ftp的路径一致 -->
 			<directoryNode id="filePath" nameType="static" name="OlineSacrificeFiles"><!--网祭平台文件根目录 -->
 				<redundancy switch="on"><!--是否进行文件删冗  on | off-->
 					<fingerGenType type="server"><!--指纹产生方式 server | client-->

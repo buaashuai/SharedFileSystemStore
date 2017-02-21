@@ -9,5 +9,5 @@
         <expandFileName>Expand_store.sys</expandFileName><!--结点扩容信息文件名 -->
 		<clusterServerIp>127.0.0.1</clusterServerIp><!-- 集群管理系统的Ip地址-->
 		<clusterServerPort>9998</clusterServerPort><!-- 集群管理系统的监听端 口-->
-		<expandCriticalValue>0.1</expandCriticalValue><!-- 存储目录扩容临界值-->
+		<expandCriticalValue>0.1</expandCriticalValue><!-- 存储目录扩容临界值，磁盘占用空间>=0.1时就开始扩容-->
 </SystemConfig>
